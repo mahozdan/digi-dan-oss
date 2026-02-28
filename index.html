@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Join the Community — OSS EventBridge Platform</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,300;8..60,400;8..60,600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0a0e17;
+            --bg-card: #111827;
+            --bg-card-hover: #1a2332;
+            --border: #1e293b;
+            --border-focus: #f59e0b;
+            --text: #e2e8f0;
+            --text-muted: #64748b;
+            --text-dim: #475569;
+            --accent: #f59e0b;
+            --accent-soft: rgba(245, 158, 11, 0.1);
+            --accent-glow: rgba(245, 158, 11, 0.15);
+            --green: #22c55e;
+            --green-soft: rgba(34, 197, 94, 0.1);
+            --red: #ef4444;
+            --mono: 'JetBrains Mono', monospace;
+            --serif: 'Source Serif 4', Georgia, serif;
+        }
+
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: var(--mono);
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Subtle grid background */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image:
+                linear-gradient(rgba(245, 158, 11, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(245, 158, 11, 0.03) 1px, transparent 1px);
+            background-size: 60px 60px;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Top glow */
+        body::after {
+            content: '';
+            position: fixed;
+            top: -200px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 800px;
+            height: 500px;
+            background: radial-gradient(ellipse, rgba(245, 158, 11, 0.06) 0%, transparent 70%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .page { position: relative; z-index: 1; }
+
+        /* ─── NAV ─── */
+        nav {
+            padding: 20px 40px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid var(--border);
+            backdrop-filter: blur(12px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(10, 14, 23, 0.85);
+        }
+
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: var(--text);
+        }
+
+        .nav-logo-icon {
+            width: 32px;
+            height: 32px;
+            border: 2px solid var(--accent);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            color: var(--accent);
+            font-weight: 700;
+        }
+
+        .nav-logo-text {
+            font-size: 14px;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+        }
+
+        .nav-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+            color: var(--green);
+        }
+
+        .nav-status::before {
+            content: '';
+            width: 6px;
+            height: 6px;
+            background: var(--green);
+            border-radius: 50%;
+            animation: pulse-dot 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse-dot {
+            0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.4); }
+            50% { opacity: 0.7; box-shadow: 0 0 0 6px rgba(34, 197, 94, 0); }
+        }
+
+        /* ─── HERO ─── */
+        .hero {
+            padding: 80px 40px 60px;
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 16px;
+            border: 1px solid var(--border);
+            border-radius: 100px;
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-bottom: 32px;
+            background: var(--bg-card);
+            animation: fadeInDown 0.6s ease-out;
+        }
+
+        .hero-badge .dot {
+            width: 6px;
+            height: 6px;
+            background: var(--accent);
+            border-radius: 50%;
+        }
+
+        .hero h1 {
+            font-family: var(--serif);
+            font-size: clamp(36px, 6vw, 56px);
+            font-weight: 600;
+            line-height: 1.15;
+            letter-spacing: -0.02em;
+            margin-bottom: 24px;
+            animation: fadeInDown 0.6s ease-out 0.1s both;
+        }
+
+        .hero h1 .highlight {
+            color: var(--accent);
+            position: relative;
+        }
+
+        .hero p {
+            font-family: var(--serif);
+            font-size: 18px;
+            color: var(--text-muted);
+            line-height: 1.7;
+            max-width: 560px;
+            margin: 0 auto;
+            font-weight: 300;
+            animation: fadeInDown 0.6s ease-out 0.2s both;
+        }
+
+        /* ─── RULES STRIP ─── */
+        .rules-strip {
+            padding: 0 40px;
+            max-width: 900px;
+            margin: 0 auto 60px;
+            animation: fadeInDown 0.6s ease-out 0.3s both;
+        }
+
+        .rules-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1px;
+            background: var(--border);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .rule-item {
+            background: var(--bg-card);
+            padding: 20px 24px;
+            display: flex;
+            gap: 14px;
+            align-items: flex-start;
+            transition: background 0.2s;
+        }
+
+        .rule-item:hover { background: var(--bg-card-hover); }
+
+        .rule-num {
+            font-size: 11px;
+            color: var(--accent);
+            font-weight: 600;
+            min-width: 20px;
+            padding-top: 2px;
+        }
+
+        .rule-text {
+            font-size: 13px;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        .rule-text strong {
+            color: var(--text);
+            font-weight: 500;
+        }
+
+        /* ─── FORM SECTION ─── */
+        .form-section {
+            max-width: 580px;
+            margin: 0 auto;
+            padding: 0 40px 100px;
+            animation: fadeInDown 0.6s ease-out 0.4s both;
+        }
+
+        .form-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .form-header h2 {
+            font-family: var(--serif);
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .form-header p {
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        .form-card {
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            background: var(--bg-card);
+            padding: 36px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .form-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--accent), transparent);
+        }
+
+        .field {
+            margin-bottom: 24px;
+        }
+
+        .field:last-of-type { margin-bottom: 32px; }
+
+        label {
+            display: block;
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+        }
+
+        label .required {
+            color: var(--accent);
+            margin-left: 2px;
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 12px 16px;
+            font-family: var(--mono);
+            font-size: 14px;
+            color: var(--text);
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        input:focus, textarea:focus, select:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px var(--accent-soft);
+        }
+
+        input::placeholder, textarea::placeholder {
+            color: var(--text-dim);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+            line-height: 1.6;
+        }
+
+        select {
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M2 4l4 4 4-4' fill='none' stroke='%2364748b' stroke-width='1.5'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 14px center;
+            padding-right: 36px;
+        }
+
+        select option {
+            background: var(--bg-card);
+            color: var(--text);
+        }
+
+        .field-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .checkbox-field {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            margin-bottom: 28px;
+            cursor: pointer;
+        }
+
+        .checkbox-field input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            min-width: 18px;
+            padding: 0;
+            margin-top: 1px;
+            cursor: pointer;
+            accent-color: var(--accent);
+        }
+
+        .checkbox-field span {
+            font-size: 13px;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        .checkbox-field a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        .checkbox-field a:hover { text-decoration: underline; }
+
+        .submit-btn {
+            width: 100%;
+            padding: 14px 24px;
+            font-family: var(--mono);
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--bg);
+            background: var(--accent);
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            letter-spacing: 0.3px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .submit-btn:hover {
+            background: #d97706;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 16px rgba(245, 158, 11, 0.25);
+        }
+
+        .submit-btn:active { transform: translateY(0); }
+
+        .submit-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .submit-btn .spinner {
+            display: none;
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(10, 14, 23, 0.3);
+            border-top-color: var(--bg);
+            border-radius: 50%;
+            animation: spin 0.6s linear infinite;
+            margin: 0 auto;
+        }
+
+        .submit-btn.loading .btn-text { display: none; }
+        .submit-btn.loading .spinner { display: block; }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* ─── SUCCESS STATE ─── */
+        .success-message {
+            display: none;
+            text-align: center;
+            padding: 60px 36px;
+        }
+
+        .success-message.visible { display: block; }
+
+        .success-icon {
+            width: 56px;
+            height: 56px;
+            border: 2px solid var(--green);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            color: var(--green);
+            font-size: 24px;
+            background: var(--green-soft);
+            animation: scaleIn 0.3s ease-out;
+        }
+
+        @keyframes scaleIn {
+            from { transform: scale(0); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .success-message h3 {
+            font-family: var(--serif);
+            font-size: 22px;
+            margin-bottom: 12px;
+        }
+
+        .success-message p {
+            font-size: 13px;
+            color: var(--text-muted);
+            line-height: 1.6;
+            max-width: 380px;
+            margin: 0 auto;
+        }
+
+        /* ─── ERROR STATE ─── */
+        .error-banner {
+            display: none;
+            padding: 12px 16px;
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            border-radius: 8px;
+            margin-bottom: 24px;
+            font-size: 13px;
+            color: var(--red);
+        }
+
+        .error-banner.visible { display: block; }
+
+        /* ─── FOOTER ─── */
+        footer {
+            text-align: center;
+            padding: 24px 40px;
+            border-top: 1px solid var(--border);
+            font-size: 12px;
+            color: var(--text-dim);
+        }
+
+        footer a {
+            color: var(--text-muted);
+            text-decoration: none;
+        }
+
+        footer a:hover { color: var(--accent); }
+
+        /* ─── ANIMATIONS ─── */
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(16px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ─── RESPONSIVE ─── */
+        @media (max-width: 640px) {
+            nav { padding: 16px 20px; }
+            .hero { padding: 60px 20px 40px; }
+            .rules-strip { padding: 0 20px; margin-bottom: 40px; }
+            .rules-grid { grid-template-columns: 1fr; }
+            .form-section { padding: 0 20px 80px; }
+            .form-card { padding: 24px; }
+            .field-row { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="page">
+        <nav>
+            <a href="#" class="nav-logo">
+                <div class="nav-logo-icon">EB</div>
+                <span class="nav-logo-text">community platform</span>
+            </a>
+            <div class="nav-status">accepting applications</div>
+        </nav>
+
+        <section class="hero">
+            <div class="hero-badge">
+                <span class="dot"></span>
+                Open Source · AWS il-central-1
+            </div>
+            <h1>Build apps.<br>Ship events.<br><span class="highlight">Own nothing else.</span></h1>
+            <p>An open-source event-driven platform on AWS. You bring the app, we provide the bus, the warehouse, and the guardrails. Deploy in hours, not weeks.</p>
+        </section>
+
+        <section class="rules-strip">
+            <div class="rules-grid">
+                <div class="rule-item">
+                    <span class="rule-num">01</span>
+                    <span class="rule-text"><strong>Ship a manifest</strong>, get to deploy. No gatekeeping.</span>
+                </div>
+                <div class="rule-item">
+                    <span class="rule-num">02</span>
+                    <span class="rule-text"><strong>All events flow through the bus.</strong> EventBridge is the only integration point.</span>
+                </div>
+                <div class="rule-item">
+                    <span class="rule-num">03</span>
+                    <span class="rule-text"><strong>Schema first.</strong> Register before you publish.</span>
+                </div>
+                <div class="rule-item">
+                    <span class="rule-num">04</span>
+                    <span class="rule-text"><strong>Everything is code.</strong> No console clicking. Terraform only.</span>
+                </div>
+                <div class="rule-item">
+                    <span class="rule-num">05</span>
+                    <span class="rule-text"><strong>Stay in Israel.</strong> All infra in il-central-1. Enforced by SCP.</span>
+                </div>
+                <div class="rule-item">
+                    <span class="rule-num">06</span>
+                    <span class="rule-text"><strong>Own your app.</strong> You build it, you run it, you fix it.</span>
+                </div>
+            </div>
+        </section>
+
+        <section class="form-section">
+            <div class="form-header">
+                <h2>Apply to join</h2>
+                <p>We'll review your application within 48 hours.</p>
+            </div>
+
+            <div class="form-card">
+                <form id="apply-form">
+                    <div class="error-banner" id="error-banner"></div>
+
+                    <div class="field-row">
+                        <div class="field">
+                            <label>Full Name <span class="required">*</span></label>
+                            <input type="text" name="name" required placeholder="Jane Doe" autocomplete="name">
+                        </div>
+                        <div class="field">
+                            <label>Email <span class="required">*</span></label>
+                            <input type="email" name="email" required placeholder="jane@example.com" autocomplete="email">
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <label>GitHub Username <span class="required">*</span></label>
+                        <input type="text" name="github" required placeholder="janedoe" pattern="^[a-zA-Z0-9](?:[a-zA-Z0-9]|-(?=[a-zA-Z0-9])){0,38}$" title="Valid GitHub username">
+                    </div>
+
+                    <div class="field-row">
+                        <div class="field">
+                            <label>Primary Language</label>
+                            <select name="language">
+                                <option value="">Select...</option>
+                                <option value="typescript">TypeScript</option>
+                                <option value="javascript">JavaScript</option>
+                                <option value="python">Python</option>
+                                <option value="go">Go</option>
+                                <option value="rust">Rust</option>
+                                <option value="java">Java</option>
+                                <option value="csharp">C#</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        <div class="field">
+                            <label>AWS Experience</label>
+                            <select name="aws_experience">
+                                <option value="">Select...</option>
+                                <option value="none">New to AWS</option>
+                                <option value="basic">Basic (S3, Lambda)</option>
+                                <option value="intermediate">Intermediate</option>
+                                <option value="advanced">Advanced</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <label>What do you want to build? <span class="required">*</span></label>
+                        <textarea name="project_idea" required placeholder="Describe your app idea in a few sentences. What events will it publish or consume?"></textarea>
+                    </div>
+
+                    <div class="field">
+                        <label>Organization / Company (optional)</label>
+                        <input type="text" name="organization" placeholder="Acme Corp">
+                    </div>
+
+                    <label class="checkbox-field">
+                        <input type="checkbox" name="agree" required>
+                        <span>I've read the <a href="#" target="_blank">Core Rules</a> and <a href="#" target="_blank">App Contract</a> and agree to follow them.</span>
+                    </label>
+
+                    <button type="submit" class="submit-btn" id="submit-btn">
+                        <span class="btn-text">Submit Application →</span>
+                        <span class="spinner"></span>
+                    </button>
+                </form>
+
+                <div class="success-message" id="success-message">
+                    <div class="success-icon">✓</div>
+                    <h3>Application received</h3>
+                    <p>We'll review your application and get back to you at your email within 48 hours. In the meantime, check out the docs and start thinking about your app manifest.</p>
+                </div>
+            </div>
+        </section>
+
+        <footer>
+            <a href="#">Docs</a> &nbsp;·&nbsp; <a href="#">GitHub</a> &nbsp;·&nbsp; <a href="#">Core Rules</a>
+            &nbsp;&nbsp;—&nbsp;&nbsp; MIT License · Hosted in AWS il-central-1 🇮🇱
+        </footer>
+    </div>
+
+    <script>
+        const form = document.getElementById('apply-form');
+        const btn = document.getElementById('submit-btn');
+        const errorBanner = document.getElementById('error-banner');
+        const successMessage = document.getElementById('success-message');
+
+        // Replace with your API Gateway endpoint after deploying
+        const API_ENDPOINT = '{{API_GATEWAY_URL}}/apply';
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            errorBanner.classList.remove('visible');
+            btn.classList.add('loading');
+            btn.disabled = true;
+
+            const formData = new FormData(form);
+            const data = Object.fromEntries(formData.entries());
+            data.submitted_at = new Date().toISOString();
+            data.agree = formData.has('agree');
+
+            try {
+                const response = await fetch(API_ENDPOINT, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data),
+                });
+
+                if (!response.ok) throw new Error('Submission failed');
+
+                // Success
+                form.style.display = 'none';
+                successMessage.classList.add('visible');
+
+            } catch (err) {
+                errorBanner.textContent = 'Something went wrong. Please try again or email us directly.';
+                errorBanner.classList.add('visible');
+                btn.classList.remove('loading');
+                btn.disabled = false;
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>digi-dan oss | קהילת קוד פתוח לחוסן לאומי</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;700&family=Orbitron:wght@500;700&display=swap');
+
+        :root {
+            --neon-blue: #00d4ff;
+            --dark-bg: #050505;
+        }
+
+        body {
+            font-family: 'Assistant', sans-serif;
+            background-color: var(--dark-bg);
+            color: #e0e0e0;
+            scroll-behavior: smooth;
+        }
+
+        .tech-font {
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        .neon-text {
+            color: var(--neon-blue);
+            text-shadow: 0 0 10px rgba(0, 212, 255, 0.7);
+        }
+
+        .neon-border {
+            border: 1px solid var(--neon-blue);
+            box-shadow: 0 0 15px rgba(0, 212, 255, 0.2);
+        }
+
+        .neon-button {
+            background: transparent;
+            border: 2px solid var(--neon-blue);
+            color: var(--neon-blue);
+            transition: all 0.3s ease;
+        }
+
+        .neon-button:hover {
+            background: var(--neon-blue);
+            color: #000;
+            box-shadow: 0 0 25px rgba(0, 212, 255, 0.8);
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(0, 212, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover {
+            border-color: var(--neon-blue);
+            transform: translateY(-5px);
+        }
+
+        .seahorse-divider {
+            width: 40px;
+            height: 40px;
+            filter: drop-shadow(0 0 5px var(--neon-blue));
+            opacity: 0.6;
+            margin: 2rem auto;
+        }
+
+        details summary::-webkit-details-marker {
+            display: none;
+        }
+
+        details summary {
+            list-style: none;
+        }
+    </style>
+</head>
+
+<body class="overflow-x-hidden">
+
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full z-50 bg-black/80 backdrop-blur-md border-b border-white/5">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <img src="https://i.ibb.co/VWVvD6n/Editor-result.jpg" alt="Logo"
+                    class="w-10 h-10 rounded-full border border-[#00d4ff]">
+                <span class="text-xl font-bold tech-font neon-text tracking-tighter">digi-dan oss</span>
+            </div>
+            <div class="hidden md:flex gap-8 text-sm font-medium">
+                <a href="#about" class="hover:text-[#00d4ff] transition">מבוא</a>
+                <a href="#mission" class="hover:text-[#00d4ff] transition">חזון</a>
+                <a href="#rules" class="hover:text-[#00d4ff] transition">כללים</a>
+                <a href="#faq" class="hover:text-[#00d4ff] transition">שאלות נפוצות</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 1. General Introduction & Hero -->
+    <section id="about" class="relative pt-32 pb-20 px-4 text-center">
+        <div class="max-w-4xl mx-auto">
+            <img src="https://i.ibb.co/VWVvD6n/Editor-result.jpg" alt="digi-dan logo"
+                class="w-40 h-40 mx-auto mb-8 drop-shadow-[0_0_20px_rgba(0,212,255,0.4)]">
+            <h1 class="text-5xl md:text-7xl font-black mb-6 leading-tight">קהילת קוד פתוח ל-<span
+                    class="neon-text">ביטחון העורף</span></h1>
+            <p class="text-xl md:text-2xl text-gray-400 mb-10 font-light leading-relaxed">
+                ברוכים הבאים ל-**digi-dan oss**. אנחנו קבוצה של מפתחים, מעצבים ואנשי טכנולוגיה שהחליטו לא לחכות – אלא
+                לבנות.
+                הקהילה שלנו מתמקדת ביצירת תשתיות תוכנה חופשיות ונגישות עבור מערכות התרעה, מיגון וסיוע אזרחי בשעת חירום.
+            </p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <a href="#join" class="neon-button px-10 py-4 rounded-xl text-lg font-bold">הצטרפו למאגר (GitHub)</a>
+            </div>
+        </div>
+    </section>
+
+    <img src="https://i.ibb.co/VWVvD6n/Editor-result.jpg" class="seahorse-divider" alt="divider">
+
+    <!-- 3. Community Mission -->
+    <section id="mission" class="py-20 px-6 max-w-5xl mx-auto">
+        <div class="text-center mb-16">
+            <h2 class="text-4xl font-bold mb-4">החזון שלנו</h2>
+            <div class="h-1 w-24 bg-[#00d4ff] mx-auto rounded-full shadow-[0_0_10px_#00d4ff]"></div>
+        </div>
+        <div class="grid md:grid-cols-2 gap-12">
+            <div class="bg-white/5 p-8 rounded-2xl border-r-4 border-[#00d4ff]">
+                <h3 class="text-2xl font-bold mb-4">דמוקרטיזציה של מידע</h3>
+                <p class="text-gray-400">אנחנו מאמינים שמידע מציל חיים צריך להיות נגיש לכל מפתח. המטרה שלנו היא לייצר
+                    שכבת תוכנה שתנגיש את נתוני פיקוד העורף לכל אפליקציה אזרחית בצורה פשוטה ויציבה.</p>
+            </div>
+            <div class="bg-white/5 p-8 rounded-2xl border-r-4 border-[#00d4ff]">
+                <h3 class="text-2xl font-bold mb-4">חוסן קהילתי טכנולוגי</h3>
+                <p class="text-gray-400">בשעת חירום, המערכות הממשלתיות עשויות לעמוד בעומס. אנחנו בונים מערכות גיבוי
+                    וכלים משלימים המבוססים על חוכמת ההמונים והתנדבות מקצועית.</p>
+            </div>
+        </div>
+    </section>
+
+    <img src="https://i.ibb.co/VWVvD6n/Editor-result.jpg" class="seahorse-divider" alt="divider">
+
+    <!-- 4. Community Rules -->
+    <section id="rules" class="py-20 px-6 bg-zinc-950/50">
+        <div class="max-w-4xl mx-auto">
+            <h2 class="text-4xl font-bold mb-12 text-center">חוקי הקהילה</h2>
+            <div class="space-y-6">
+                <div class="flex gap-4 items-start">
+                    <span class="text-[#00d4ff] font-bold text-2xl tech-font">01</span>
+                    <p class="text-lg"><span class="text-white font-bold">בטיחות לפני הכל:</span> אין להעלות קוד שעלול
+                        לסכן פרטיות משתמשים או לחשוף מיקומי מתקנים ביטחוניים רגישים.</p>
+                </div>
+                <div class="flex gap-4 items-start">
+                    <span class="text-[#00d4ff] font-bold text-2xl tech-font">02</span>
+                    <p class="text-lg"><span class="text-white font-bold">א-פוליטיות:</span> הקהילה עוסקת בטכנולוגיה
+                        ובהצלת חיים בלבד. שיח פוליטי אינו חלק מהפרויקטים שלנו.</p>
+                </div>
+                <div class="flex gap-4 items-start">
+                    <span class="text-[#00d4ff] font-bold text-2xl tech-font">03</span>
+                    <p class="text-lg"><span class="text-white font-bold">קוד נקי ומתועד:</span> אנחנו בונים תשתיות
+                        קריטיות. כל תרומת קוד (PR) חייבת לעבור בדיקות קפדניות ולכלול תיעוד בעברית/אנגלית.</p>
+                </div>
+                <div class="flex gap-4 items-start">
+                    <span class="text-[#00d4ff] font-bold text-2xl tech-font">04</span>
+                    <p class="text-lg"><span class="text-white font-bold">כבוד הדדי:</span> אנחנו קהילה של מתנדבים. נהגו
+                        בכבוד בתגובות ובביקורת הקוד.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 5. FAQ -->
+    <section id="faq" class="py-20 px-6 max-w-3xl mx-auto">
+        <h2 class="text-4xl font-bold mb-12 text-center">שאלות נפוצות</h2>
+        <div class="space-y-4">
+            <details class="feature-card rounded-xl overflow-hidden group">
+                <summary class="p-6 cursor-pointer flex justify-between items-center font-bold">
+                    <span>האם הפרויקט קשור רשמית לפיקוד העורף?</span>
+                    <span class="text-[#00d4ff] transition-transform group-open:rotate-180">▼</span>
+                </summary>
+                <div class="px-6 pb-6 text-gray-400">
+                    לא. זוהי יוזמה אזרחית עצמאית (OSS). אנחנו משתמשים במידע פתוח ובממשקים ציבוריים כדי לבנות פתרונות
+                    משלימים לטובת הציבור.
+                </div>
+            </details>
+            <details class="feature-card rounded-xl overflow-hidden group">
+                <summary class="p-6 cursor-pointer flex justify-between items-center font-bold">
+                    <span>אני לא מפתח, אני יכול לעזור?</span>
+                    <span class="text-[#00d4ff] transition-transform group-open:rotate-180">▼</span>
+                </summary>
+                <div class="px-6 pb-6 text-gray-400">
+                    בהחלט! אנחנו זקוקים למעצבי UX/UI, כותבי תוכן, בודקי תוכנה (QA) ואנשים שיכולים לעזור בתרגום והנגשת
+                    מידע.
+                </div>
+            </details>
+            <details class="feature-card rounded-xl overflow-hidden group">
+                <summary class="p-6 cursor-pointer flex justify-between items-center font-bold">
+                    <span>באילו שפות פיתוח אתם משתמשים?</span>
+                    <span class="text-[#00d4ff] transition-transform group-open:rotate-180">▼</span>
+                </summary>
+                <div class="px-6 pb-6 text-gray-400">
+                    עיקר הפעילות כרגע היא ב-Node.js, React Native ו-Python, אבל אנחנו פתוחים לכל טכנולוגיה שיכולה לתרום
+                    למשימה.
+                </div>
+            </details>
+        </div>
+    </section>
+
+    <!-- 2. CAT (Call to Action) -->
+    <section id="join" class="py-24 px-6">
+        <div
+            class="max-w-4xl mx-auto neon-border rounded-3xl p-12 text-center bg-gradient-to-br from-[#050505] to-[#111] relative overflow-hidden">
+            <div class="relative z-10">
+                <h2 class="text-4xl font-bold mb-6">הגיע הזמן לפעול</h2>
+                <p class="text-xl text-gray-400 mb-10 italic">"מי שמציל שורת קוד אחת, כאילו הציל עולם מלא..."</p>
+                <div class="flex flex-wrap justify-center gap-6">
+                    <button onclick="copyToClipboard('github.com/digi-dan-oss')"
+                        class="neon-button px-10 py-4 rounded-xl font-bold flex items-center gap-3">
+                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                            <path
+                                d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
+                        </svg>
+                        לצפייה ב-GitHub
+                    </button>
+                    <button onclick="window.location.href='mailto:contact@digidan.org'"
+                        class="bg-white/5 hover:bg-white/10 px-10 py-4 rounded-xl font-bold transition">צרו קשר
+                        במייל</button>
+                </div>
+                <div id="status" class="mt-4 text-sm text-[#00d4ff] h-6 font-bold"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 6. Footer -->
+    <footer class="py-12 border-t border-white/5 bg-black">
+        <div
+            class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-8 text-center md:text-right">
+            <div>
+                <div class="flex items-center gap-3 justify-center md:justify-start mb-4">
+                    <img src="https://i.ibb.co/VWVvD6n/Editor-result.jpg" alt="Logo"
+                        class="w-8 h-8 rounded-full grayscale opacity-50">
+                    <span class="text-lg font-bold tech-font text-gray-500 uppercase">digi-dan oss</span>
+                </div>
+                <p class="text-gray-600 text-sm max-w-sm">
+                    קהילה המונעת על ידי מתנדבים. הקוד מוגש תחת רישיון MIT. אין לראות במידע זה ייעוץ ביטחוני רשמי.
+                </p>
+            </div>
+            <div class="flex gap-12 text-gray-500 text-sm">
+                <div class="flex flex-col gap-2">
+                    <span class="text-white font-bold mb-2">קהילה</span>
+                    <a href="#" class="hover:text-white transition">GitHub</a>
+                    <a href="#" class="hover:text-white transition">Discord</a>
+                </div>
+                <div class="flex flex-col gap-2">
+                    <span class="text-white font-bold mb-2">משפטי</span>
+                    <a href="#" class="hover:text-white transition">פרטיות</a>
+                    <a href="#" class="hover:text-white transition">תנאי שימוש</a>
+                </div>
+            </div>
+        </div>
+        <div class="mt-12 text-center text-gray-700 text-xs tracking-widest uppercase tech-font">
+            Built with 💙 by the Israeli Tech Community
+        </div>
+    </footer>
+
+    <script>
+        function copyToClipboard(text) {
+            const el = document.createElement('textarea');
+            el.value = text;
+            document.body.appendChild(el);
+            el.select();
+            document.execCommand('copy');
+            document.body.removeChild(el);
+
+            const status = document.getElementById('status');
+            status.innerText = "> SYSTEM: LINK COPIED. JOIN US.";
+            setTimeout(() => status.innerText = "", 3000);
+        }
+    </script>
+</body>
+
+</html>
