@@ -1,0 +1,68 @@
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  AWS_REGION: il-central-1
+
+jobs:
+  deploy:
+    name: Deploy to AWS
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_wrapper: false
+
+      - name: Terraform Init
+        working-directory: terraform
+        run: terraform init
+
+      - name: Terraform Apply
+        working-directory: terraform
+        run: terraform apply -auto-approve
+
+      - name: Get Terraform outputs
+        working-directory: terraform
+        id: tf
+        run: |
+          echo "api_url=$(terraform output -raw api_url)" >> "$GITHUB_OUTPUT"
+          echo "bucket=$(terraform output -raw s3_bucket_name)" >> "$GITHUB_OUTPUT"
+          echo "distribution_id=$(terraform output -raw cloudfront_distribution_id)" >> "$GITHUB_OUTPUT"
+
+      - name: Inject API URL into HTML
+        run: |
+          sed -i "s|{{API_GATEWAY_URL}}|${{ steps.tf.outputs.api_url }}|g" index.html
+
+      - name: Upload site to S3
+        run: |
+          aws s3 cp index.html "s3://${{ steps.tf.outputs.bucket }}/index.html" \
+            --content-type "text/html; charset=utf-8" --region "$AWS_REGION"
+          aws s3 cp logo.png "s3://${{ steps.tf.outputs.bucket }}/logo.png" \
+            --content-type "image/png" --region "$AWS_REGION"
+          aws s3 cp logo-with-text.png "s3://${{ steps.tf.outputs.bucket }}/logo-with-text.png" \
+            --content-type "image/png" --region "$AWS_REGION"
+
+      - name: Invalidate CloudFront cache
+        run: |
+          aws cloudfront create-invalidation \
+            --distribution-id "${{ steps.tf.outputs.distribution_id }}" \
+            --paths "/*"

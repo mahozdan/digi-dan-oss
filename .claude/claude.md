@@ -29,6 +29,8 @@ Load skill from `.claude/skills/{skill}.md` before executing task.
 | api, endpoint, route, rest | `api` |
 | error handling, exceptions, catch | `error` |
 | deploy, ci, cd, pipeline | `deploy` |
+| iam, permissions, policy, role, user | `sdlc/iam-permissions` |
+| devops script, cli wizard, bash deploy | `writing-devops-scripts` |
 | database, schema, migration, query | `db` |
 | config, env, settings | `config` |
 

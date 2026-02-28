@@ -1,599 +1,345 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="he" dir="rtl">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Join the Community — OSS EventBridge Platform</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,300;8..60,400;8..60,600&display=swap" rel="stylesheet">
+    <title>digi-dan oss | קהילת קוד פתוח לחוסן לאומי</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        :root {
-            --bg: #0a0e17;
-            --bg-card: #111827;
-            --bg-card-hover: #1a2332;
-            --border: #1e293b;
-            --border-focus: #f59e0b;
-            --text: #e2e8f0;
-            --text-muted: #64748b;
-            --text-dim: #475569;
-            --accent: #f59e0b;
-            --accent-soft: rgba(245, 158, 11, 0.1);
-            --accent-glow: rgba(245, 158, 11, 0.15);
-            --green: #22c55e;
-            --green-soft: rgba(34, 197, 94, 0.1);
-            --red: #ef4444;
-            --mono: 'JetBrains Mono', monospace;
-            --serif: 'Source Serif 4', Georgia, serif;
-        }
+        @import url('https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;700&family=Orbitron:wght@500;700&display=swap');
 
-        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        :root {
+            --neon: #00d4ff;
+            --dark-bg: #050505;
+        }
 
         body {
-            font-family: var(--mono);
-            background: var(--bg);
-            color: var(--text);
-            min-height: 100vh;
-            overflow-x: hidden;
-            -webkit-font-smoothing: antialiased;
+            font-family: 'Assistant', sans-serif;
+            background: var(--dark-bg);
+            color: #e0e0e0;
+            scroll-behavior: smooth;
         }
 
-        /* Subtle grid background */
-        body::before {
-            content: '';
-            position: fixed;
-            inset: 0;
-            background-image:
-                linear-gradient(rgba(245, 158, 11, 0.03) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(245, 158, 11, 0.03) 1px, transparent 1px);
-            background-size: 60px 60px;
-            pointer-events: none;
-            z-index: 0;
+        .tech-font {
+            font-family: 'Orbitron', sans-serif;
         }
 
-        /* Top glow */
-        body::after {
-            content: '';
-            position: fixed;
-            top: -200px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 800px;
-            height: 500px;
-            background: radial-gradient(ellipse, rgba(245, 158, 11, 0.06) 0%, transparent 70%);
-            pointer-events: none;
-            z-index: 0;
+        .neon-text {
+            color: var(--neon);
+            text-shadow: 0 0 10px rgba(0, 212, 255, 0.7);
         }
 
-        .page { position: relative; z-index: 1; }
-
-        /* ─── NAV ─── */
-        nav {
-            padding: 20px 40px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            border-bottom: 1px solid var(--border);
-            backdrop-filter: blur(12px);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            background: rgba(10, 14, 23, 0.85);
+        .neon-border {
+            border: 1px solid var(--neon);
+            box-shadow: 0 0 15px rgba(0, 212, 255, 0.2);
         }
 
-        .nav-logo {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            text-decoration: none;
-            color: var(--text);
+        .neon-button {
+            background: transparent;
+            border: 2px solid var(--neon);
+            color: var(--neon);
+            transition: all 0.3s;
         }
 
-        .nav-logo-icon {
-            width: 32px;
-            height: 32px;
-            border: 2px solid var(--accent);
-            border-radius: 6px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 14px;
-            color: var(--accent);
-            font-weight: 700;
+        .neon-button:hover:not(:disabled) {
+            background: var(--neon);
+            color: #000;
+            box-shadow: 0 0 25px rgba(0, 212, 255, 0.8);
         }
 
-        .nav-logo-text {
-            font-size: 14px;
-            font-weight: 500;
-            letter-spacing: 0.5px;
-        }
-
-        .nav-status {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 12px;
-            color: var(--green);
-        }
-
-        .nav-status::before {
-            content: '';
-            width: 6px;
-            height: 6px;
-            background: var(--green);
-            border-radius: 50%;
-            animation: pulse-dot 2s ease-in-out infinite;
-        }
-
-        @keyframes pulse-dot {
-            0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.4); }
-            50% { opacity: 0.7; box-shadow: 0 0 0 6px rgba(34, 197, 94, 0); }
-        }
-
-        /* ─── HERO ─── */
-        .hero {
-            padding: 80px 40px 60px;
-            max-width: 800px;
-            margin: 0 auto;
-            text-align: center;
-        }
-
-        .hero-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 6px 16px;
-            border: 1px solid var(--border);
-            border-radius: 100px;
-            font-size: 12px;
-            color: var(--text-muted);
-            margin-bottom: 32px;
-            background: var(--bg-card);
-            animation: fadeInDown 0.6s ease-out;
-        }
-
-        .hero-badge .dot {
-            width: 6px;
-            height: 6px;
-            background: var(--accent);
-            border-radius: 50%;
-        }
-
-        .hero h1 {
-            font-family: var(--serif);
-            font-size: clamp(36px, 6vw, 56px);
-            font-weight: 600;
-            line-height: 1.15;
-            letter-spacing: -0.02em;
-            margin-bottom: 24px;
-            animation: fadeInDown 0.6s ease-out 0.1s both;
-        }
-
-        .hero h1 .highlight {
-            color: var(--accent);
-            position: relative;
-        }
-
-        .hero p {
-            font-family: var(--serif);
-            font-size: 18px;
-            color: var(--text-muted);
-            line-height: 1.7;
-            max-width: 560px;
-            margin: 0 auto;
-            font-weight: 300;
-            animation: fadeInDown 0.6s ease-out 0.2s both;
-        }
-
-        /* ─── RULES STRIP ─── */
-        .rules-strip {
-            padding: 0 40px;
-            max-width: 900px;
-            margin: 0 auto 60px;
-            animation: fadeInDown 0.6s ease-out 0.3s both;
-        }
-
-        .rules-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-            gap: 1px;
-            background: var(--border);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            overflow: hidden;
-        }
-
-        .rule-item {
-            background: var(--bg-card);
-            padding: 20px 24px;
-            display: flex;
-            gap: 14px;
-            align-items: flex-start;
-            transition: background 0.2s;
-        }
-
-        .rule-item:hover { background: var(--bg-card-hover); }
-
-        .rule-num {
-            font-size: 11px;
-            color: var(--accent);
-            font-weight: 600;
-            min-width: 20px;
-            padding-top: 2px;
-        }
-
-        .rule-text {
-            font-size: 13px;
-            color: var(--text-muted);
-            line-height: 1.5;
-        }
-
-        .rule-text strong {
-            color: var(--text);
-            font-weight: 500;
-        }
-
-        /* ─── FORM SECTION ─── */
-        .form-section {
-            max-width: 580px;
-            margin: 0 auto;
-            padding: 0 40px 100px;
-            animation: fadeInDown 0.6s ease-out 0.4s both;
-        }
-
-        .form-header {
-            text-align: center;
-            margin-bottom: 40px;
-        }
-
-        .form-header h2 {
-            font-family: var(--serif);
-            font-size: 28px;
-            font-weight: 600;
-            margin-bottom: 8px;
-        }
-
-        .form-header p {
-            font-size: 13px;
-            color: var(--text-muted);
-        }
-
-        .form-card {
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            background: var(--bg-card);
-            padding: 36px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .form-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 2px;
-            background: linear-gradient(90deg, transparent, var(--accent), transparent);
-        }
-
-        .field {
-            margin-bottom: 24px;
-        }
-
-        .field:last-of-type { margin-bottom: 32px; }
-
-        label {
-            display: block;
-            font-size: 12px;
-            font-weight: 500;
-            color: var(--text-muted);
-            margin-bottom: 8px;
-            text-transform: uppercase;
-            letter-spacing: 0.8px;
-        }
-
-        label .required {
-            color: var(--accent);
-            margin-left: 2px;
-        }
-
-        input, textarea, select {
-            width: 100%;
-            padding: 12px 16px;
-            font-family: var(--mono);
-            font-size: 14px;
-            color: var(--text);
-            background: var(--bg);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            outline: none;
-            transition: border-color 0.2s, box-shadow 0.2s;
-        }
-
-        input:focus, textarea:focus, select:focus {
-            border-color: var(--accent);
-            box-shadow: 0 0 0 3px var(--accent-soft);
-        }
-
-        input::placeholder, textarea::placeholder {
-            color: var(--text-dim);
-        }
-
-        textarea {
-            resize: vertical;
-            min-height: 100px;
-            line-height: 1.6;
-        }
-
-        select {
-            cursor: pointer;
-            appearance: none;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M2 4l4 4 4-4' fill='none' stroke='%2364748b' stroke-width='1.5'/%3E%3C/svg%3E");
-            background-repeat: no-repeat;
-            background-position: right 14px center;
-            padding-right: 36px;
-        }
-
-        select option {
-            background: var(--bg-card);
-            color: var(--text);
-        }
-
-        .field-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 16px;
-        }
-
-        .checkbox-field {
-            display: flex;
-            align-items: flex-start;
-            gap: 12px;
-            margin-bottom: 28px;
-            cursor: pointer;
-        }
-
-        .checkbox-field input[type="checkbox"] {
-            width: 18px;
-            height: 18px;
-            min-width: 18px;
-            padding: 0;
-            margin-top: 1px;
-            cursor: pointer;
-            accent-color: var(--accent);
-        }
-
-        .checkbox-field span {
-            font-size: 13px;
-            color: var(--text-muted);
-            line-height: 1.5;
-        }
-
-        .checkbox-field a {
-            color: var(--accent);
-            text-decoration: none;
-        }
-
-        .checkbox-field a:hover { text-decoration: underline; }
-
-        .submit-btn {
-            width: 100%;
-            padding: 14px 24px;
-            font-family: var(--mono);
-            font-size: 14px;
-            font-weight: 600;
-            color: var(--bg);
-            background: var(--accent);
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.2s;
-            letter-spacing: 0.3px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .submit-btn:hover {
-            background: #d97706;
-            transform: translateY(-1px);
-            box-shadow: 0 4px 16px rgba(245, 158, 11, 0.25);
-        }
-
-        .submit-btn:active { transform: translateY(0); }
-
-        .submit-btn:disabled {
+        .neon-button:disabled {
             opacity: 0.5;
             cursor: not-allowed;
-            transform: none;
-            box-shadow: none;
         }
 
-        .submit-btn .spinner {
-            display: none;
-            width: 16px;
-            height: 16px;
-            border: 2px solid rgba(10, 14, 23, 0.3);
-            border-top-color: var(--bg);
+        .feature-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(0, 212, 255, 0.1);
+            transition: all 0.3s;
+        }
+
+        .feature-card:hover {
+            border-color: var(--neon);
+            transform: translateY(-5px);
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px 16px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(0, 212, 255, 0.15);
+            border-radius: 12px;
+            color: #e0e0e0;
+            font-family: 'Assistant', sans-serif;
+            font-size: 16px;
+            transition: all 0.3s;
+            outline: none;
+        }
+
+        .form-input:focus {
+            border-color: var(--neon);
+            box-shadow: 0 0 15px rgba(0, 212, 255, 0.2);
+        }
+
+        .form-input::placeholder {
+            color: #555;
+        }
+
+        select.form-input {
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M2 4l4 4 4-4' fill='none' stroke='%2300d4ff' stroke-width='1.5'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: left 14px center;
+        }
+
+        select.form-input option {
+            background: #111;
+            color: #e0e0e0;
+        }
+
+        textarea.form-input {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .spinner {
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(0, 0, 0, 0.3);
+            border-top-color: #000;
             border-radius: 50%;
             animation: spin 0.6s linear infinite;
             margin: 0 auto;
         }
 
-        .submit-btn.loading .btn-text { display: none; }
-        .submit-btn.loading .spinner { display: block; }
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
 
-        @keyframes spin { to { transform: rotate(360deg); } }
-
-        /* ─── SUCCESS STATE ─── */
-        .success-message {
+        details summary::-webkit-details-marker {
             display: none;
-            text-align: center;
-            padding: 60px 36px;
         }
 
-        .success-message.visible { display: block; }
-
-        .success-icon {
-            width: 56px;
-            height: 56px;
-            border: 2px solid var(--green);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 20px;
-            color: var(--green);
-            font-size: 24px;
-            background: var(--green-soft);
-            animation: scaleIn 0.3s ease-out;
+        details summary {
+            list-style: none;
         }
 
-        @keyframes scaleIn {
-            from { transform: scale(0); opacity: 0; }
-            to { transform: scale(1); opacity: 1; }
-        }
-
-        .success-message h3 {
-            font-family: var(--serif);
-            font-size: 22px;
-            margin-bottom: 12px;
-        }
-
-        .success-message p {
-            font-size: 13px;
-            color: var(--text-muted);
-            line-height: 1.6;
-            max-width: 380px;
-            margin: 0 auto;
-        }
-
-        /* ─── ERROR STATE ─── */
-        .error-banner {
-            display: none;
-            padding: 12px 16px;
-            background: rgba(239, 68, 68, 0.1);
-            border: 1px solid rgba(239, 68, 68, 0.2);
-            border-radius: 8px;
-            margin-bottom: 24px;
-            font-size: 13px;
-            color: var(--red);
-        }
-
-        .error-banner.visible { display: block; }
-
-        /* ─── FOOTER ─── */
-        footer {
-            text-align: center;
-            padding: 24px 40px;
-            border-top: 1px solid var(--border);
-            font-size: 12px;
-            color: var(--text-dim);
-        }
-
-        footer a {
-            color: var(--text-muted);
-            text-decoration: none;
-        }
-
-        footer a:hover { color: var(--accent); }
-
-        /* ─── ANIMATIONS ─── */
-        @keyframes fadeInDown {
-            from { opacity: 0; transform: translateY(16px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* ─── RESPONSIVE ─── */
-        @media (max-width: 640px) {
-            nav { padding: 16px 20px; }
-            .hero { padding: 60px 20px 40px; }
-            .rules-strip { padding: 0 20px; margin-bottom: 40px; }
-            .rules-grid { grid-template-columns: 1fr; }
-            .form-section { padding: 0 20px 80px; }
-            .form-card { padding: 24px; }
-            .field-row { grid-template-columns: 1fr; }
+        .divider-logo {
+            width: 40px;
+            height: 40px;
+            filter: drop-shadow(0 0 5px var(--neon));
+            opacity: 0.6;
+            margin: 2rem auto;
         }
     </style>
 </head>
-<body>
-    <div class="page">
-        <nav>
-            <a href="#" class="nav-logo">
-                <div class="nav-logo-icon">EB</div>
-                <span class="nav-logo-text">community platform</span>
+
+<body class="overflow-x-hidden">
+
+    <!-- ═══ NAVIGATION ═══ -->
+    <nav class="fixed top-0 w-full z-50 bg-black/80 backdrop-blur-md border-b border-white/5">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <img src="logo.png" alt="Logo" class="w-10 h-10 rounded-full border border-[#00d4ff]">
+                <span class="text-xl font-bold tech-font neon-text tracking-tighter">digi-dan oss</span>
+            </div>
+            <div class="hidden md:flex gap-8 text-sm font-medium">
+                <a href="#about" class="hover:text-[#00d4ff] transition">מבוא</a>
+                <a href="#mission" class="hover:text-[#00d4ff] transition">חזון</a>
+                <a href="#rules" class="hover:text-[#00d4ff] transition">כללים</a>
+                <a href="#apply" class="hover:text-[#00d4ff] transition">הגשת מועמדות</a>
+                <a href="#faq" class="hover:text-[#00d4ff] transition">שאלות נפוצות</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ═══ HERO ═══ -->
+    <section id="about" class="relative pt-32 pb-20 px-4 text-center">
+        <div class="max-w-4xl mx-auto">
+            <img src="logo-with-text.png" alt="digi-dan logo"
+                class="w-52 h-52 mx-auto mb-8 drop-shadow-[0_0_20px_rgba(0,212,255,0.4)]">
+            <div
+                class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-white/10 bg-white/5 text-sm text-gray-400 mb-8">
+                <span class="w-1.5 h-1.5 bg-[#00d4ff] rounded-full"></span>
+                מחוז דן — פיקוד העורף
+            </div>
+            <h1 class="text-5xl md:text-7xl font-black mb-6 leading-tight">
+                קהילת קוד פתוח ל<span class="neon-text">חוסן לאומי</span>
+            </h1>
+            <p class="text-xl md:text-2xl text-gray-400 mb-10 font-light leading-relaxed max-w-2xl mx-auto">
+                אנחנו קבוצה של מפתחים, מעצבים ואנשי טכנולוגיה שהחליטו לא לחכות — אלא לבנות.
+                אקוסיסטם פתוח של אפליקציות אזרחיות שמתקשרות דרך תשתית משותפת — לטובת אזרחי וחיילי מחוז דן.
+            </p>
+            <a href="#apply" class="neon-button inline-block px-10 py-4 rounded-xl text-lg font-bold">
+                הגישו מועמדות
             </a>
-            <div class="nav-status">accepting applications</div>
-        </nav>
+        </div>
+    </section>
 
-        <section class="hero">
-            <div class="hero-badge">
-                <span class="dot"></span>
-                Open Source · AWS il-central-1
+    <img src="logo.png" class="divider-logo" alt="">
+
+    <!-- ═══ MISSION ═══ -->
+    <section id="mission" class="py-20 px-6 max-w-5xl mx-auto">
+        <div class="text-center mb-16">
+            <h2 class="text-4xl font-bold mb-4">החזון שלנו</h2>
+            <div class="h-1 w-24 bg-[#00d4ff] mx-auto rounded-full shadow-[0_0_10px_#00d4ff]"></div>
+        </div>
+        <div class="grid md:grid-cols-2 gap-12">
+            <div class="bg-white/5 p-8 rounded-2xl border-r-4 border-[#00d4ff]">
+                <h3 class="text-2xl font-bold mb-4">דמוקרטיזציה של מידע</h3>
+                <p class="text-gray-400 leading-relaxed">
+                    מידע שמציל חיים צריך להיות נגיש לכולם.
+                    אנחנו בונים תשתית משותפת שמאפשרת לכל מפתח לבנות אפליקציה אזרחית
+                    שמתחברת לאקוסיסטם — בשפה שלו, בכלים שלו, בקצב שלו.
+                </p>
             </div>
-            <h1>Build apps.<br>Ship events.<br><span class="highlight">Own nothing else.</span></h1>
-            <p>An open-source event-driven platform on AWS. You bring the app, we provide the bus, the warehouse, and the guardrails. Deploy in hours, not weeks.</p>
-        </section>
+            <div class="bg-white/5 p-8 rounded-2xl border-r-4 border-[#00d4ff]">
+                <h3 class="text-2xl font-bold mb-4">חוסן קהילתי טכנולוגי</h3>
+                <p class="text-gray-400 leading-relaxed">
+                    בשעת חירום, המערכות הממשלתיות עשויות לא לעמוד בעומס.
+                    אנחנו בונים מערכת של אפליקציות עצמאיות שעובדות יחד —
+                    כל אחת בבעלות הצוות שבנה אותה, כולן מתקשרות דרך תשתית מרכזית אחת.
+                </p>
+            </div>
+            <div class="bg-white/5 p-8 rounded-2xl border-r-4 border-[#00d4ff]">
+                <h3 class="text-2xl font-bold mb-4">חופש עם אחריות</h3>
+                <p class="text-gray-400 leading-relaxed">
+                    אין שומרי סף מיותרים. עמדו בחוזה — ותוכלו לפרוס.
+                    בחרו בשפה שלכם, בארכיטקטורה שלכם, בקצב שלכם.
+                    בתמורה — אתם אחראים על מה שבניתם: תפעול, ניטור, תיקון.
+                </p>
+            </div>
+            <div class="bg-white/5 p-8 rounded-2xl border-r-4 border-[#00d4ff]">
+                <h3 class="text-2xl font-bold mb-4">שקיפות מוחלטת</h3>
+                <p class="text-gray-400 leading-relaxed">
+                    כל החלטה מתועדת. כל מדיניות פתוחה לשינוי.
+                    הקוד פתוח, הדיונים פומביים, והתקשורת כולה נשמרת ונגישה.
+                    אנחנו בונים אמון דרך שקיפות — לא דרך סמכות.
+                </p>
+            </div>
+        </div>
+    </section>
 
-        <section class="rules-strip">
-            <div class="rules-grid">
-                <div class="rule-item">
-                    <span class="rule-num">01</span>
-                    <span class="rule-text"><strong>Ship a manifest</strong>, get to deploy. No gatekeeping.</span>
+    <img src="logo.png" class="divider-logo" alt="">
+
+    <!-- ═══ RULES ═══ -->
+    <section id="rules" class="py-20 px-6 bg-zinc-950/50">
+        <div class="max-w-4xl mx-auto">
+            <h2 class="text-4xl font-bold mb-12 text-center">חוקי הקהילה</h2>
+            <div class="space-y-6">
+                <div class="flex gap-4 items-start">
+                    <span class="text-[#00d4ff] font-bold text-2xl tech-font min-w-[40px]">01</span>
+                    <p class="text-lg"><span class="text-white font-bold">בטיחות לפני הכל:</span> אין להעלות קוד שעלול
+                        לסכן פרטיות משתמשים או לחשוף מידע ביטחוני רגיש. מידע אישי חייב להיות מוצהר ומוגן.</p>
                 </div>
-                <div class="rule-item">
-                    <span class="rule-num">02</span>
-                    <span class="rule-text"><strong>All events flow through the bus.</strong> EventBridge is the only integration point.</span>
+                <div class="flex gap-4 items-start">
+                    <span class="text-[#00d4ff] font-bold text-2xl tech-font min-w-[40px]">02</span>
+                    <p class="text-lg"><span class="text-white font-bold">א-פוליטיות:</span> הקהילה עוסקת בטכנולוגיה
+                        ובהצלת חיים בלבד. שיח פוליטי אינו חלק מהפרויקטים שלנו.</p>
                 </div>
-                <div class="rule-item">
-                    <span class="rule-num">03</span>
-                    <span class="rule-text"><strong>Schema first.</strong> Register before you publish.</span>
+                <div class="flex gap-4 items-start">
+                    <span class="text-[#00d4ff] font-bold text-2xl tech-font min-w-[40px]">03</span>
+                    <p class="text-lg"><span class="text-white font-bold">עמדו בחוזה — תוכלו לפרוס:</span> כל אפליקציה
+                        חייבת להגדיר מה היא עושה, מה היא צורכת ומה היא מפרסמת. עמדתם בחוזה? אתם בפנים. אין שומרי סף מיותרים.</p>
                 </div>
-                <div class="rule-item">
-                    <span class="rule-num">04</span>
-                    <span class="rule-text"><strong>Everything is code.</strong> No console clicking. Terraform only.</span>
+                <div class="flex gap-4 items-start">
+                    <span class="text-[#00d4ff] font-bold text-2xl tech-font min-w-[40px]">04</span>
+                    <p class="text-lg"><span class="text-white font-bold">לא שוברים אחרים:</span> שינויים שמשפיעים על אחרים
+                        דורשים תקופת מעבר. אם מישהו תלוי בעבודה שלכם — אתם אחראים להודיע ולתת זמן להתאים.</p>
                 </div>
-                <div class="rule-item">
-                    <span class="rule-num">05</span>
-                    <span class="rule-text"><strong>Stay in Israel.</strong> All infra in il-central-1. Enforced by SCP.</span>
+                <div class="flex gap-4 items-start">
+                    <span class="text-[#00d4ff] font-bold text-2xl tech-font min-w-[40px]">05</span>
+                    <p class="text-lg"><span class="text-white font-bold">הנתונים נשארים בארץ:</span> כל המידע
+                        והתשתית נמצאים בישראל בלבד. ללא חריגים. נאכף אוטומטית — לא על בסיס אמון.</p>
                 </div>
-                <div class="rule-item">
-                    <span class="rule-num">06</span>
-                    <span class="rule-text"><strong>Own your app.</strong> You build it, you run it, you fix it.</span>
+                <div class="flex gap-4 items-start">
+                    <span class="text-[#00d4ff] font-bold text-2xl tech-font min-w-[40px]">06</span>
+                    <p class="text-lg"><span class="text-white font-bold">אבטחה היא לא אופציונלית:</span> בדיקות אבטחה
+                        רצות אוטומטית על כל תרומה. ממצאים קריטיים חוסמים מיזוג. אין קיצורי דרך.</p>
+                </div>
+                <div class="flex gap-4 items-start">
+                    <span class="text-[#00d4ff] font-bold text-2xl tech-font min-w-[40px]">07</span>
+                    <p class="text-lg"><span class="text-white font-bold">סכמה קודם:</span> לפני שמפרסמים מידע לאקוסיסטם —
+                        מגדירים את המבנה ומסכמים עליו. מידע לא מוגדר לא נכנס.</p>
+                </div>
+                <div class="flex gap-4 items-start">
+                    <span class="text-[#00d4ff] font-bold text-2xl tech-font min-w-[40px]">08</span>
+                    <p class="text-lg"><span class="text-white font-bold">הכל בקוד:</span> כל התשתית מוגדרת כקוד. אין פעולות ידניות.
+                        מה שלא כתוב בקוד — לא קיים.</p>
+                </div>
+                <div class="flex gap-4 items-start">
+                    <span class="text-[#00d4ff] font-bold text-2xl tech-font min-w-[40px]">09</span>
+                    <p class="text-lg"><span class="text-white font-bold">בנית? שלך:</span> אתם בונים את האפליקציה, אתם מנטרים אותה,
+                        אתם מתקנים אותה. הפלטפורמה נותנת כלים — לא ליווי צמוד.</p>
+                </div>
+                <div class="flex gap-4 items-start">
+                    <span class="text-[#00d4ff] font-bold text-2xl tech-font min-w-[40px]">10</span>
+                    <p class="text-lg"><span class="text-white font-bold">אין סודות משותפים:</span> כל אפליקציה מבודדת
+                        עם הרשאות משלה. שירותים מתקשרים רק דרך התשתית המשותפת — לא בגישה ישירה.</p>
+                </div>
+                <div class="flex gap-4 items-start">
+                    <span class="text-[#00d4ff] font-bold text-2xl tech-font min-w-[40px]">11</span>
+                    <p class="text-lg"><span class="text-white font-bold">שקיפות:</span> כל החלטה מתועדת. כל מדיניות
+                        פתוחה לשינוי ולהערות הקהילה. אם אתם תוהים "למה ככה?" — התשובה כתובה.</p>
+                </div>
+                <div class="flex gap-4 items-start">
+                    <span class="text-[#00d4ff] font-bold text-2xl tech-font min-w-[40px]">12</span>
+                    <p class="text-lg"><span class="text-white font-bold">היו נחמדים, שלחו מהר:</span> אנחנו קהילה של מתנדבים.
+                        ענו לביקורות קוד תוך 48 שעות. הניחו כוונה טובה. כבוד הדדי זה הבסיס.</p>
                 </div>
             </div>
-        </section>
+        </div>
+    </section>
 
-        <section class="form-section">
-            <div class="form-header">
-                <h2>Apply to join</h2>
-                <p>We'll review your application within 48 hours.</p>
+    <img src="logo.png" class="divider-logo" alt="">
+
+    <!-- ═══ APPLICATION FORM ═══ -->
+    <section id="apply" class="py-20 px-6">
+        <div class="max-w-2xl mx-auto">
+            <div class="text-center mb-12">
+                <h2 class="text-4xl font-bold mb-4">הגשת מועמדות</h2>
+                <p class="text-gray-400">נבדוק את הבקשה שלך ונחזור אליך תוך 48 שעות.</p>
             </div>
 
-            <div class="form-card">
-                <form id="apply-form">
-                    <div class="error-banner" id="error-banner"></div>
+            <div class="neon-border rounded-3xl p-8 md:p-12 bg-gradient-to-br from-[#050505] to-[#111] relative overflow-hidden">
+                <form id="apply-form" class="space-y-6" id="form-content">
 
-                    <div class="field-row">
-                        <div class="field">
-                            <label>Full Name <span class="required">*</span></label>
-                            <input type="text" name="name" required placeholder="Jane Doe" autocomplete="name">
+                    <div id="error-banner"
+                        class="hidden p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-sm">
+                    </div>
+
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm text-gray-400 mb-2">שם מלא <span
+                                    class="text-[#00d4ff]">*</span></label>
+                            <input type="text" name="name" required placeholder="ישראל ישראלי" class="form-input"
+                                autocomplete="name">
                         </div>
-                        <div class="field">
-                            <label>Email <span class="required">*</span></label>
-                            <input type="email" name="email" required placeholder="jane@example.com" autocomplete="email">
+                        <div>
+                            <label class="block text-sm text-gray-400 mb-2">אימייל <span
+                                    class="text-[#00d4ff]">*</span></label>
+                            <input type="email" name="email" required placeholder="name@example.com" class="form-input"
+                                autocomplete="email" dir="ltr">
                         </div>
                     </div>
 
-                    <div class="field">
-                        <label>GitHub Username <span class="required">*</span></label>
-                        <input type="text" name="github" required placeholder="janedoe" pattern="^[a-zA-Z0-9](?:[a-zA-Z0-9]|-(?=[a-zA-Z0-9])){0,38}$" title="Valid GitHub username">
+                    <div>
+                        <label class="block text-sm text-gray-400 mb-2">שם משתמש GitHub <span
+                                class="text-[#00d4ff]">*</span></label>
+                        <input type="text" name="github" required placeholder="username" class="form-input" dir="ltr"
+                            pattern="^[a-zA-Z0-9](?:[a-zA-Z0-9]|-(?=[a-zA-Z0-9])){0,38}$"
+                            title="שם משתמש GitHub תקין">
                     </div>
 
-                    <div class="field-row">
-                        <div class="field">
-                            <label>Primary Language</label>
-                            <select name="language">
-                                <option value="">Select...</option>
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm text-gray-400 mb-2">שפת תכנות עיקרית</label>
+                            <select name="language" class="form-input">
+                                <option value="">בחירה...</option>
                                 <option value="typescript">TypeScript</option>
                                 <option value="javascript">JavaScript</option>
                                 <option value="python">Python</option>
@@ -601,70 +347,180 @@
                                 <option value="rust">Rust</option>
                                 <option value="java">Java</option>
                                 <option value="csharp">C#</option>
-                                <option value="other">Other</option>
+                                <option value="other">אחר</option>
                             </select>
                         </div>
-                        <div class="field">
-                            <label>AWS Experience</label>
-                            <select name="aws_experience">
-                                <option value="">Select...</option>
-                                <option value="none">New to AWS</option>
-                                <option value="basic">Basic (S3, Lambda)</option>
-                                <option value="intermediate">Intermediate</option>
-                                <option value="advanced">Advanced</option>
+                        <div>
+                            <label class="block text-sm text-gray-400 mb-2">ניסיון AWS</label>
+                            <select name="aws_experience" class="form-input">
+                                <option value="">בחירה...</option>
+                                <option value="none">חדש/ה ב-AWS</option>
+                                <option value="basic">בסיסי (S3, Lambda)</option>
+                                <option value="intermediate">בינוני</option>
+                                <option value="advanced">מתקדם</option>
                             </select>
                         </div>
                     </div>
 
-                    <div class="field">
-                        <label>What do you want to build? <span class="required">*</span></label>
-                        <textarea name="project_idea" required placeholder="Describe your app idea in a few sentences. What events will it publish or consume?"></textarea>
+                    <div>
+                        <label class="block text-sm text-gray-400 mb-2">מה את/ה רוצה לבנות? <span
+                                class="text-[#00d4ff]">*</span></label>
+                        <textarea name="project_idea" required class="form-input"
+                            placeholder="תארו את רעיון האפליקציה שלכם בכמה משפטים. איזה מידע תפרסמו לקהילה ואיזה מידע תצרכו מאפליקציות אחרות?"></textarea>
                     </div>
 
-                    <div class="field">
-                        <label>Organization / Company (optional)</label>
-                        <input type="text" name="organization" placeholder="Acme Corp">
+                    <div>
+                        <label class="block text-sm text-gray-400 mb-2">ארגון / חברה (אופציונלי)</label>
+                        <input type="text" name="organization" placeholder="שם הארגון" class="form-input">
                     </div>
 
-                    <label class="checkbox-field">
-                        <input type="checkbox" name="agree" required>
-                        <span>I've read the <a href="#" target="_blank">Core Rules</a> and <a href="#" target="_blank">App Contract</a> and agree to follow them.</span>
+                    <label class="flex items-start gap-3 cursor-pointer text-sm text-gray-400">
+                        <input type="checkbox" name="agree" required
+                            class="mt-1 w-5 h-5 rounded accent-[#00d4ff] cursor-pointer">
+                        <span>קראתי את <a href="#rules" class="text-[#00d4ff] hover:underline">12 חוקי הקהילה</a>
+                            ומתחייב/ת לעמוד בהם.</span>
                     </label>
 
-                    <button type="submit" class="submit-btn" id="submit-btn">
-                        <span class="btn-text">Submit Application →</span>
-                        <span class="spinner"></span>
+                    <button type="submit" id="submit-btn"
+                        class="neon-button w-full py-4 rounded-xl font-bold text-lg">
+                        <span class="btn-text">הגשת מועמדות</span>
+                        <span class="spinner hidden"></span>
                     </button>
                 </form>
 
-                <div class="success-message" id="success-message">
-                    <div class="success-icon">✓</div>
-                    <h3>Application received</h3>
-                    <p>We'll review your application and get back to you at your email within 48 hours. In the meantime, check out the docs and start thinking about your app manifest.</p>
+                <div id="success-message" class="hidden text-center py-12">
+                    <div
+                        class="w-16 h-16 mx-auto mb-6 rounded-full border-2 border-green-400 flex items-center justify-center text-green-400 text-3xl bg-green-400/10">
+                        ✓
+                    </div>
+                    <h3 class="text-2xl font-bold mb-3">הבקשה התקבלה!</h3>
+                    <p class="text-gray-400 max-w-md mx-auto">
+                        נבדוק את הבקשה שלך ונחזור אליך באימייל תוך 48 שעות.
+                        בינתיים, עיין/י בתיעוד ותתחיל/י לחשוב על הפרויקט שלך.
+                    </p>
                 </div>
             </div>
-        </section>
+        </div>
+    </section>
 
-        <footer>
-            <a href="#">Docs</a> &nbsp;·&nbsp; <a href="#">GitHub</a> &nbsp;·&nbsp; <a href="#">Core Rules</a>
-            &nbsp;&nbsp;—&nbsp;&nbsp; MIT License · Hosted in AWS il-central-1 🇮🇱
-        </footer>
-    </div>
+    <img src="logo.png" class="divider-logo" alt="">
+
+    <!-- ═══ FAQ ═══ -->
+    <section id="faq" class="py-20 px-6 max-w-3xl mx-auto">
+        <h2 class="text-4xl font-bold mb-12 text-center">שאלות נפוצות</h2>
+        <div class="space-y-4">
+            <details class="feature-card rounded-xl overflow-hidden group">
+                <summary class="p-6 cursor-pointer flex justify-between items-center font-bold">
+                    <span>האם הפרויקט קשור רשמית לפיקוד העורף?</span>
+                    <span class="text-[#00d4ff] transition-transform group-open:rotate-180">▼</span>
+                </summary>
+                <div class="px-6 pb-6 text-gray-400">
+                    לא. זוהי יוזמה אזרחית עצמאית בקוד פתוח (OSS). אנחנו בונים פתרונות
+                    משלימים לטובת הציבור. הקוד כולו ברישיון MIT.
+                </div>
+            </details>
+            <details class="feature-card rounded-xl overflow-hidden group">
+                <summary class="p-6 cursor-pointer flex justify-between items-center font-bold">
+                    <span>אני לא מפתח/ת, אני יכול/ה לעזור?</span>
+                    <span class="text-[#00d4ff] transition-transform group-open:rotate-180">▼</span>
+                </summary>
+                <div class="px-6 pb-6 text-gray-400">
+                    בהחלט! אנחנו זקוקים למעצבי UX/UI, כותבי תוכן, בודקי תוכנה (QA) ואנשים שיכולים לעזור בתרגום והנגשת
+                    מידע.
+                </div>
+            </details>
+            <details class="feature-card rounded-xl overflow-hidden group">
+                <summary class="p-6 cursor-pointer flex justify-between items-center font-bold">
+                    <span>אני חייב/ת לדעת שפת פיתוח מסוימת?</span>
+                    <span class="text-[#00d4ff] transition-transform group-open:rotate-180">▼</span>
+                </summary>
+                <div class="px-6 pb-6 text-gray-400">
+                    לא. אין הגבלה על שפת תכנות, פריימוורק או ארכיטקטורה. בחרו בכלים שאתם מכירים.
+                    כל מה שנדרש הוא לעמוד בחוזה האפליקציה — מה שאתם בונים, מה אתם מפרסמים, מה אתם צורכים.
+                </div>
+            </details>
+            <details class="feature-card rounded-xl overflow-hidden group">
+                <summary class="p-6 cursor-pointer flex justify-between items-center font-bold">
+                    <span>כמה זמן לוקח להצטרף ולהתחיל?</span>
+                    <span class="text-[#00d4ff] transition-transform group-open:rotate-180">▼</span>
+                </summary>
+                <div class="px-6 pb-6 text-gray-400">
+                    תהליך ההצטרפות מתוכנן לקחת שעה-שעתיים למפתח מוכן: מלאו את החוזה,
+                    הגדירו את הסכמות שלכם, שלחו בקשה — ותוכלו לפרוס.
+                </div>
+            </details>
+            <details class="feature-card rounded-xl overflow-hidden group">
+                <summary class="p-6 cursor-pointer flex justify-between items-center font-bold">
+                    <span>מי אחראי על האפליקציה שלי אחרי הפריסה?</span>
+                    <span class="text-[#00d4ff] transition-transform group-open:rotate-180">▼</span>
+                </summary>
+                <div class="px-6 pb-6 text-gray-400">
+                    אתם. זה העיקרון "בנית? שלך". הפלטפורמה מספקת ניטור, דשבורדים והתראות —
+                    אבל אתם אחראים על התפעול, התחזוקה והתיקון של מה שבניתם.
+                </div>
+            </details>
+            <details class="feature-card rounded-xl overflow-hidden group">
+                <summary class="p-6 cursor-pointer flex justify-between items-center font-bold">
+                    <span>איך אפליקציות מתקשרות ביניהן?</span>
+                    <span class="text-[#00d4ff] transition-transform group-open:rotate-180">▼</span>
+                </summary>
+                <div class="px-6 pb-6 text-gray-400">
+                    כל התקשורת עוברת דרך תשתית מרכזית אחת. אפליקציות מפרסמות אירועים
+                    ונרשמות לאירועים של אחרים — בלי גישה ישירה בין שירותים. כל אירוע שעובר במערכת נשמר גם למאגר מידע מרכזי.
+                </div>
+            </details>
+        </div>
+    </section>
+
+    <!-- ═══ FOOTER ═══ -->
+    <footer class="py-12 border-t border-white/5 bg-black">
+        <div
+            class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-8 text-center md:text-right">
+            <div>
+                <div class="flex items-center gap-3 justify-center md:justify-start mb-4">
+                    <img src="logo.png" alt="Logo" class="w-8 h-8 rounded-full grayscale opacity-50">
+                    <span class="text-lg font-bold tech-font text-gray-500 uppercase">digi-dan oss</span>
+                </div>
+                <p class="text-gray-600 text-sm max-w-sm">
+                    יוזמה אזרחית עצמאית המונעת על ידי מתנדבים. הקוד מוגש תחת רישיון MIT.
+                    כל הנתונים נשמרים בישראל בלבד. אין לראות במידע זה ייעוץ ביטחוני רשמי.
+                </p>
+            </div>
+            <div class="flex gap-12 text-gray-500 text-sm">
+                <div class="flex flex-col gap-2">
+                    <span class="text-white font-bold mb-2">קהילה</span>
+                    <a href="#" class="hover:text-white transition">GitHub</a>
+                    <a href="#" class="hover:text-white transition">Discord</a>
+                </div>
+                <div class="flex flex-col gap-2">
+                    <span class="text-white font-bold mb-2">משפטי</span>
+                    <a href="#" class="hover:text-white transition">פרטיות</a>
+                    <a href="#" class="hover:text-white transition">תנאי שימוש</a>
+                </div>
+            </div>
+        </div>
+        <div class="mt-12 text-center text-gray-700 text-xs tracking-widest uppercase tech-font">
+            Built with ❤ by the Israeli Tech Community
+        </div>
+    </footer>
 
     <script>
         const form = document.getElementById('apply-form');
         const btn = document.getElementById('submit-btn');
         const errorBanner = document.getElementById('error-banner');
         const successMessage = document.getElementById('success-message');
+        const btnText = btn.querySelector('.btn-text');
+        const spinner = btn.querySelector('.spinner');
 
         // Replace with your API Gateway endpoint after deploying
         const API_ENDPOINT = '{{API_GATEWAY_URL}}/apply';
 
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
-            errorBanner.classList.remove('visible');
-            btn.classList.add('loading');
+            errorBanner.classList.add('hidden');
             btn.disabled = true;
+            btnText.classList.add('hidden');
+            spinner.classList.remove('hidden');
 
             const formData = new FormData(form);
             const data = Object.fromEntries(formData.entries());
@@ -680,17 +536,17 @@
 
                 if (!response.ok) throw new Error('Submission failed');
 
-                // Success
-                form.style.display = 'none';
-                successMessage.classList.add('visible');
-
+                form.classList.add('hidden');
+                successMessage.classList.remove('hidden');
             } catch (err) {
-                errorBanner.textContent = 'Something went wrong. Please try again or email us directly.';
-                errorBanner.classList.add('visible');
-                btn.classList.remove('loading');
+                errorBanner.textContent = 'משהו השתבש. אנא נסו שוב או פנו אלינו ישירות במייל.';
+                errorBanner.classList.remove('hidden');
                 btn.disabled = false;
+                btnText.classList.remove('hidden');
+                spinner.classList.add('hidden');
             }
         });
     </script>
 </body>
+
 </html>

@@ -1,0 +1,74 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "S3DestroyBuckets",
+      "Effect": "Allow",
+      "Action": [
+        "s3:DeleteBucket",
+        "s3:DeleteBucketPolicy",
+        "s3:DeleteBucketWebsite",
+        "s3:DeleteObject"
+      ],
+      "Resource": [
+        "arn:aws:s3:::digi-dan-oss-join-site",
+        "arn:aws:s3:::digi-dan-oss-join-site/*",
+        "arn:aws:s3:::digi-dan-oss-tfstate",
+        "arn:aws:s3:::digi-dan-oss-tfstate/*"
+      ]
+    },
+    {
+      "Sid": "DynamoDBDestroy",
+      "Effect": "Allow",
+      "Action": "dynamodb:DeleteTable",
+      "Resource": "arn:aws:dynamodb:il-central-1:*:table/community-applications"
+    },
+    {
+      "Sid": "LambdaDestroy",
+      "Effect": "Allow",
+      "Action": "lambda:DeleteFunction",
+      "Resource": "arn:aws:lambda:il-central-1:*:function:digi-dan-oss-join-apply"
+    },
+    {
+      "Sid": "IAMRoleDestroy",
+      "Effect": "Allow",
+      "Action": [
+        "iam:DeleteRole",
+        "iam:DeleteRolePolicy"
+      ],
+      "Resource": "arn:aws:iam::*:role/digi-dan-oss-join-lambda"
+    },
+    {
+      "Sid": "APIGatewayDestroy",
+      "Effect": "Allow",
+      "Action": "apigateway:DELETE",
+      "Resource": "*"
+    },
+    {
+      "Sid": "CloudFrontDestroy",
+      "Effect": "Allow",
+      "Action": [
+        "cloudfront:DeleteDistribution",
+        "cloudfront:DeleteOriginAccessControl"
+      ],
+      "Resource": "*"
+    },
+    {
+      "Sid": "SESDestroy",
+      "Effect": "Allow",
+      "Action": "ses:DeleteIdentity",
+      "Resource": "*",
+      "Condition": {
+        "StringEquals": {
+          "aws:RequestedRegion": "il-central-1"
+        }
+      }
+    },
+    {
+      "Sid": "CloudWatchLogsDestroy",
+      "Effect": "Allow",
+      "Action": "logs:DeleteLogGroup",
+      "Resource": "arn:aws:logs:il-central-1:*:log-group:/aws/lambda/digi-dan-oss-join-apply:*"
+    }
+  ]
+}
