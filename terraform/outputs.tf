@@ -24,3 +24,18 @@ output "dynamodb_table" {
   value       = aws_dynamodb_table.applications.name
   description = "DynamoDB table storing applications"
 }
+
+output "site_url" {
+  value       = "https://${var.domain_name}"
+  description = "Custom domain URL — the primary public URL"
+}
+
+output "certificate_arn" {
+  value       = aws_acm_certificate.website.arn
+  description = "ACM certificate ARN (us-east-1)"
+}
+
+output "hosted_zone_id" {
+  value       = data.aws_route53_zone.main.zone_id
+  description = "Route 53 hosted zone ID"
+}

@@ -19,8 +19,17 @@ provider "aws" {
   region = "il-central-1" # NEVER make this a variable
 }
 
-# CloudFront requires us-east-1 for some resources (e.g. ACM certs)
-# but the default CloudFront certificate works without a second provider
+# ACM certificates for CloudFront must be in us-east-1
+provider "aws" {
+  alias  = "us_east_1"
+  region = "us-east-1"
+}
+
+variable "domain_name" {
+  description = "Primary domain for the site (apex)"
+  type        = string
+  default     = "digi-dan.com"
+}
 
 variable "admin_email" {
   description = "Email to receive application notifications"

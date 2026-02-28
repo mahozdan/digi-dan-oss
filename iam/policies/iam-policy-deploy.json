@@ -166,6 +166,36 @@
       "Effect": "Allow",
       "Action": "sts:GetCallerIdentity",
       "Resource": "*"
+    },
+    {
+      "Sid": "ACMCertificates",
+      "Effect": "Allow",
+      "Action": [
+        "acm:DescribeCertificate",
+        "acm:ListCertificates",
+        "acm:ListTagsForCertificate",
+        "acm:GetCertificate"
+      ],
+      "Resource": "*"
+    },
+    {
+      "Sid": "Route53Read",
+      "Effect": "Allow",
+      "Action": [
+        "route53:GetHostedZone",
+        "route53:ListHostedZones",
+        "route53:ListHostedZonesByName",
+        "route53:ListResourceRecordSets",
+        "route53:GetChange",
+        "route53:ListTagsForResource"
+      ],
+      "Resource": "*"
+    },
+    {
+      "Sid": "Route53ManageRecords",
+      "Effect": "Allow",
+      "Action": "route53:ChangeResourceRecordSets",
+      "Resource": "arn:aws:route53:::hostedzone/*"
     }
   ]
 }

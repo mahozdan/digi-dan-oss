@@ -69,6 +69,18 @@
       "Effect": "Allow",
       "Action": "logs:DeleteLogGroup",
       "Resource": "arn:aws:logs:il-central-1:*:log-group:/aws/lambda/digi-dan-oss-join-apply:*"
+    },
+    {
+      "Sid": "ACMDestroy",
+      "Effect": "Allow",
+      "Action": "acm:DeleteCertificate",
+      "Resource": "*"
+    },
+    {
+      "Sid": "Route53Destroy",
+      "Effect": "Allow",
+      "Action": "route53:ChangeResourceRecordSets",
+      "Resource": "arn:aws:route53:::hostedzone/*"
     }
   ]
 }
