@@ -124,6 +124,7 @@
         "cloudfront:GetInvalidation",
         "cloudfront:CreateOriginAccessControl",
         "cloudfront:GetOriginAccessControl",
+        "cloudfront:ListOriginAccessControls",
         "cloudfront:UpdateOriginAccessControl"
       ],
       "Resource": "*"
@@ -171,6 +172,8 @@
       "Sid": "ACMCertificates",
       "Effect": "Allow",
       "Action": [
+        "acm:RequestCertificate",
+        "acm:AddTagsToCertificate",
         "acm:DescribeCertificate",
         "acm:ListCertificates",
         "acm:ListTagsForCertificate",

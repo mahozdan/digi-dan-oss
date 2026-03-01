@@ -7,12 +7,11 @@ terraform {
     }
   }
 
-  # Uncomment after creating the state bucket (see DEPLOY.md step 2)
-  # backend "s3" {
-  #   bucket = "digi-dan-oss-tfstate"
-  #   key    = "join-site/terraform.tfstate"
-  #   region = "il-central-1"
-  # }
+  backend "s3" {
+    bucket = "digi-dan-oss-tfstate"
+    key    = "join-site/terraform.tfstate"
+    region = "il-central-1"
+  }
 }
 
 provider "aws" {

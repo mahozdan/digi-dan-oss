@@ -32,6 +32,12 @@ jobs:
         with:
           terraform_wrapper: false
 
+      - name: Ensure Terraform state bucket exists
+        run: |
+          aws s3api head-bucket --bucket digi-dan-oss-tfstate --region il-central-1 2>/dev/null || \
+          aws s3api create-bucket --bucket digi-dan-oss-tfstate --region il-central-1 \
+            --create-bucket-configuration LocationConstraint=il-central-1
+
       - name: Terraform Init
         working-directory: terraform
         run: terraform init

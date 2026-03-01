@@ -2,7 +2,8 @@
   "permissions": {
     "allow": [
       "Bash(npm run:*)",
-      "Bash(file *)"
+      "Bash(file *)",
+      "Bash(chmod +x /e/EProjects/pkr/website-digi-dan-oss/scripts/tf-import.sh)"
     ]
   }
 }
