@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>digi-dan oss | קהילת קוד פתוח לחוסן לאומי</title>
     <link rel="canonical" href="https://digi-dan.com" />
+    <link rel="icon" type="image/png" href="logo.png">
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;700&family=Orbitron:wght@500;700&display=swap');
@@ -399,9 +400,9 @@
                             class="w-16 h-16 mx-auto mb-6 rounded-full border-2 border-yellow-400 flex items-center justify-center text-yellow-400 text-3xl bg-yellow-400/10">
                             !
                         </div>
-                        <h3 class="text-2xl font-bold mb-4">הקהילה סגורה</h3>
+                        <h3 class="text-2xl font-bold mb-4">תודה על ההתעניינות!</h3>
                         <p class="text-gray-400 max-w-md mx-auto leading-relaxed">
-                            קהילה זו סגורה לחיילי מילואים פעילים של פיקוד העורף בלבד.
+                           (<a href="#faq" class="text-[#00d4ff] underline hover:text-white transition">למה?</a>) קהילה זו סגורה לחיילי מילואים פעילים של פיקוד העורף בלבד.
                         </p>
                         <p class="text-gray-400 max-w-md mx-auto mt-4 leading-relaxed">
                             אם ברצונך להקים קהילת OSS ליחידת המילואים שלך, השאר/י פרטים ונחזור אליך:
@@ -581,7 +582,7 @@
             e.preventDefault();
             errorBanner.classList.add('hidden');
             btn.disabled = true;
-            btnText.classList.add('hidden');
+            btnText.textContent = 'רק רגע בבקשה...';
             spinner.classList.remove('hidden');
 
             const formData = new FormData(form);
@@ -604,7 +605,7 @@
                 errorBanner.textContent = 'משהו השתבש. אנא נסו שוב או פנו אלינו ישירות במייל.';
                 errorBanner.classList.remove('hidden');
                 btn.disabled = false;
-                btnText.classList.remove('hidden');
+                btnText.textContent = 'הגשת מועמדות';
                 spinner.classList.add('hidden');
             }
         });
@@ -613,7 +614,7 @@
             e.preventDefault();
             interestError.classList.add('hidden');
             interestBtn.disabled = true;
-            interestBtnText.classList.add('hidden');
+            interestBtnText.textContent = 'רק רגע בבקשה...';
             interestSpinner.classList.remove('hidden');
 
             const formData = new FormData(interestForm);
@@ -636,7 +637,7 @@
                 interestError.textContent = 'משהו השתבש. אנא נסו שוב או פנו אלינו ישירות במייל.';
                 interestError.classList.remove('hidden');
                 interestBtn.disabled = false;
-                interestBtnText.classList.remove('hidden');
+                interestBtnText.textContent = 'שליחה';
                 interestSpinner.classList.add('hidden');
             }
         });
