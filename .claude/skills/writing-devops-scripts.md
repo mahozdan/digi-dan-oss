@@ -102,6 +102,9 @@ read -rp "Press Enter when done..."
 | Wrong region | Validate region in pre-flight checks |
 | Missing CLI tool | Check in prerequisites, provide install command |
 | Windows line endings | Script should start with note: `sed -i 's/\r$//' script.sh` |
+| S3 bucket create denied | Provide manual AWS Console + CLI fallback, then `read -rp` to wait |
+| Orphaned resources from failed deploys | Detect duplicates, warn user, pick correct one automatically |
+| Terraform state migration prompt | Use `echo "yes" \| terraform init -migrate-state` |
 
 ### Pre-Flight Checks
 Verify everything needed before starting any real work:
@@ -116,6 +119,23 @@ preflight() {
 
 ## Terraform Integration
 
+### S3 Backend: Bootstrap Before Init
+**Critical lesson**: Always create the S3 state bucket via AWS CLI *before* running `terraform init`. Never comment out or disable the S3 backend — this causes state loss and orphaned resources that require painful imports.
+
+```bash
+# Step 1: Create state bucket outside Terraform
+aws s3api head-bucket --bucket "$STATE_BUCKET" 2>/dev/null || \
+  aws s3api create-bucket --bucket "$STATE_BUCKET" --region "$REGION" \
+    --create-bucket-configuration LocationConstraint="$REGION"
+aws s3api put-bucket-versioning --bucket "$STATE_BUCKET" \
+  --versioning-configuration Status=Enabled
+
+# Step 2: NOW run terraform init — backend is ready
+terraform -chdir="$TF_DIR" init
+```
+
+**If bucket creation fails (permission denied)**: Provide clear manual fallback instructions, then wait for user confirmation before continuing.
+
 ### Init + Plan + Apply Pattern
 ```bash
 terraform -chdir="$TF_DIR" init
@@ -123,6 +143,13 @@ terraform -chdir="$TF_DIR" plan -out=tfplan
 # Show plan, ask for confirmation
 terraform -chdir="$TF_DIR" apply tfplan
 ```
+
+### State Migration (local → remote)
+When moving from local state to S3 backend, `-input=false` will FAIL because Terraform needs interactive approval for state migration. Use:
+```bash
+echo "yes" | terraform init -migrate-state
+```
+Never use `-reconfigure` — it abandons local state instead of migrating it.
 
 ### Reading Outputs
 ```bash
@@ -135,6 +162,19 @@ Terraform state tracks what was created. Re-running `apply` after a partial fail
 - Retry failed resources
 - This is safe and expected
 
+### Import Pitfalls
+- `aws_acm_certificate_validation` is a Terraform "waiter", not a real AWS resource — import often fails, but this is harmless if the cert and DNS validation records are imported
+- Failed deploys without remote state create **duplicate resources** (API Gateways, ACM certs). Always detect and warn about duplicates
+- When importing API Gateways with duplicates, pick the one with a Lambda integration attached
+
+### CI/CD Wiring
+A first-deploy script must verify CI/CD works before finishing:
+1. Create state bucket → terraform init with S3 backend → apply
+2. Set GitHub secrets via `gh secret set` (prompts user, script never touches the secret value)
+3. Push to trigger workflow
+4. Monitor workflow with `gh run watch`
+5. Smoke test the deployed site
+
 ## Documentation
 Every deploy script gets a companion `.md` file documenting:
 - Prerequisites (tools, accounts, permissions)
@@ -142,6 +182,12 @@ Every deploy script gets a companion `.md` file documenting:
 - Manual actions required
 - How to re-run after failure
 - How to tear down / rollback
+
+## AWS Profile Handling
+- Default to the project-specific profile (e.g., `digi-dan`), never a generic name
+- Support `--profile` flag override: `bash script.sh --profile my-profile`
+- Export `AWS_PROFILE` early so all aws commands use it
+- Show the active profile + account ID in pre-flight output
 
 ## Checklist
 - [ ] `set -euo pipefail` at the top
@@ -156,3 +202,6 @@ Every deploy script gets a companion `.md` file documenting:
 - [ ] Handles CRLF line endings (note in docs for Windows/WSL users)
 - [ ] No secrets or tokens managed in the script
 - [ ] AWS profile passed via `--profile` flag, not hardcoded credentials
+- [ ] S3 state bucket created before terraform init
+- [ ] Script finishes only when CI/CD is verified working
+- [ ] Duplicate resource detection for re-runs after failed deploys

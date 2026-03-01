@@ -1,206 +1,134 @@
-# First Deploy — CLI Wizard Guide
+# First Deploy: digi-dan-oss
 
-Interactive bash script that provisions the complete AWS stack for the digi-dan oss community join site.
+Takes the project from "code + AWS account" to "CI/CD deploying on push to main."
 
 ## Quick Start
 
 ```bash
-# From WSL or Git Bash:
-bash deploy.sh
+# Fix line endings if running from Windows → WSL
+sed -i 's/\r$//' scripts/first-deploy.sh
+
+# Run the wizard (default AWS profile: digi-dan)
+bash scripts/first-deploy.sh
+
+# Or with a different profile
+bash scripts/first-deploy.sh --profile my-profile
 ```
 
 The wizard is **safe to re-run** — it detects existing resources and skips/updates them.
 
----
-
 ## Prerequisites
 
-| Tool | Install | Used For |
-|------|---------|----------|
-| AWS CLI v2 | `winget install Amazon.AWSCLI` | All AWS operations |
-| Terraform >= 1.6 | `winget install Hashicorp.Terraform` | Infrastructure provisioning |
-| Git | Already installed (you cloned this repo) | Version control |
-| sed | Comes with WSL/Git Bash | Inject API URL into HTML |
-| gh CLI (optional) | `winget install GitHub.cli` | Auto-set GitHub Actions secrets |
+| Requirement | Details |
+|---|---|
+| AWS CLI v2 | `aws --version` — [install](https://awscli.amazonaws.com/AWSCLIV2.msi) |
+| Terraform >= 1.6 | `terraform --version` — `winget install Hashicorp.Terraform` |
+| GitHub CLI | `gh --version` + `gh auth login` — `winget install GitHub.cli` |
+| git | Remote `origin` pointing to GitHub repo |
 
 ### AWS Account Setup (before running the script)
 
-1. **Create an IAM user** named `digi-dan-deployer` with these policies:
-   - `AmazonS3FullAccess`
-   - `AmazonDynamoDBFullAccess`
-   - `AWSLambda_FullAccess`
-   - `AmazonAPIGatewayAdministrator`
-   - `CloudFrontFullAccess`
-   - `AmazonSESFullAccess`
-   - `IAMFullAccess`
-   - `CloudWatchLogsFullAccess`
+1. **Create IAM user** `digi-dan-deployer` with access key (CLI type)
 
-2. **Generate access keys** for the user (CLI type)
+2. **Attach deploy policy** from `iam/policies/iam-policy-deploy.json`
+   - Least-privilege: only the permissions needed for this project
+   - Never use `*FullAccess` policies
 
-3. **Configure AWS CLI**:
+3. **Create Lambda execution role** `digi-dan-oss-join-lambda`
+   - Trust: Lambda service
+   - Policy from `iam/policies/iam-lambda-permissions-policy.json`
+
+4. **Configure AWS CLI profile**:
    ```bash
-   aws configure
+   aws configure --profile digi-dan
    # Access Key ID:     AKIA...
    # Secret Access Key: ...
    # Region:            il-central-1
    # Output:            json
    ```
 
-> The script **never reads, stores, or manages secrets**. AWS credentials must be configured via `aws configure` before running.
-
----
+> The script **never reads, stores, or manages secrets**. AWS credentials come from the CLI profile; GitHub secrets are set via `gh secret set` which handles secure input.
 
 ## What the Script Does
 
-### Step 1: Check Prerequisites
-- Verifies `aws`, `terraform`, `git`, `sed` are installed
-- Validates project files exist (`index.html`, `logo.png`, terraform configs, lambda code)
-- **Fails fast** if anything is missing
+### Phase 1: Bootstrap
 
-### Step 2: Verify AWS Credentials
-- Runs `aws sts get-caller-identity` to confirm authentication
-- Displays account ID and IAM user ARN
-- Checks the configured default region matches `il-central-1`
+| Step | Action | Duration |
+|---|---|---|
+| 1/12 | Pre-flight checks (aws, terraform, gh, git, curl) | ~5s |
+| 2/12 | Check IAM prerequisites (deployer policy, Lambda role) | ~10s |
+| 3/12 | Create S3 state bucket with versioning | ~5s |
 
-### Step 3: Scan Existing Resources
-- Checks if each resource already exists in AWS:
-  - S3 bucket (`digi-dan-oss-join-site`)
-  - DynamoDB table (`community-applications`)
-  - Lambda function (`digi-dan-oss-join-apply`)
-  - API Gateway (`digi-dan-oss-join-api`)
-  - CloudFront distribution
-  - TF state bucket (`digi-dan-oss-tfstate`)
-  - SES verified email
-- Reports what will be created vs. what already exists
-- **Idempotent**: safe on second/third runs
+**Key design**: The state bucket is created via AWS CLI *before* any Terraform operation. This ensures remote state from the very first `terraform init`, avoiding orphaned resources.
 
-### Step 4: Check Terraform State
-- Looks for existing `.terraform/` directory and `terraform.tfstate`
-- Reports resource count if state already exists
-- Informs whether this is a fresh or incremental deploy
+### Phase 2: Infrastructure
 
-### Step 5: Terraform Init
-- Runs `terraform init -input=false`
-- Downloads AWS provider plugins
-- Configures the backend (local by default, S3 after step 12)
+| Step | Action | Duration |
+|---|---|---|
+| 4/12 | Terraform init with S3 backend | ~15s |
+| 5/12 | Terraform plan + apply | ~5-10 min |
+| 6/12 | Read terraform outputs | ~5s |
 
-### Step 6: Terraform Plan (dry-run)
-- Runs `terraform plan` and saves the plan to `deploy.tfplan`
-- Shows exactly what will be created/changed/destroyed
-- **Pauses for user confirmation** before applying
+Creates: S3 site bucket, DynamoDB table, Lambda function, API Gateway, CloudFront distribution (Israel-only), ACM certificate, DNS records.
 
-### Step 7: Terraform Apply
-- Applies the saved plan (no additional prompts)
-- Takes 3-5 minutes (CloudFront provisioning is slow)
-- Creates:
-  - S3 bucket (private, encrypted, CloudFront-only access)
-  - DynamoDB table (on-demand, PITR, encrypted, GSI on email)
-  - Lambda function (Node.js 20, 128MB, 10s timeout, concurrency 10)
-  - IAM role for Lambda (DynamoDB PutItem + CloudWatch Logs + SES SendEmail)
-  - API Gateway HTTP API (POST /apply, throttle 5/sec burst 10)
-  - CloudFront distribution (Israel-only geo-restriction, HTTPS redirect, OAC)
-- **On partial failure**: tells user to re-run (Terraform is idempotent)
+### Phase 3: Deploy Site
 
-### Step 8: Read Terraform Outputs
-- Extracts from Terraform state:
-  - `api_url` — API Gateway endpoint
-  - `s3_bucket_name` — bucket for site files
-  - `cloudfront_distribution_id` — for cache invalidation
-  - `cloudfront_url` — public site URL
-  - `dynamodb_table` — table name
+| Step | Action | Duration |
+|---|---|---|
+| 7/12 | Upload site files to S3 (API URL injected) | ~10s |
+| 8/12 | Invalidate CloudFront cache | ~5s |
+| 9/12 | Verify site responds | ~5s |
 
-### Step 9: Upload Site Files to S3
-- Creates a temporary copy of `index.html`
-- Injects the real API Gateway URL (replaces `{{API_GATEWAY_URL}}`)
-- Uploads to S3 with correct content types:
-  - `index.html` → `text/html; charset=utf-8`
-  - `logo.png` → `image/png`
-  - `logo-with-text.png` → `image/png`
-- **Verifies** each file exists in S3 after upload
-- Cleans up the temporary file
+### Phase 4: Wire CI/CD
 
-### Step 10: Invalidate CloudFront Cache
-- Creates a `/*` invalidation to clear all cached content
-- Reports the invalidation ID
-- Cache clearing takes 1-2 minutes
+| Step | Action | Duration |
+|---|---|---|
+| 10/12 | Set GitHub secrets (AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY) | ~30s |
+| 11/12 | Push to GitHub + watch workflow run | ~3-5 min |
 
-### Step 11: Verify SES Email Identity
-- Sends a verification email to `tichnundan@gmail.com`
-- **Pauses**: asks user to check inbox and click the verification link
-- Verifies the email was confirmed
-- **Skips** if already verified on re-run
-- Note: SES sandbox only sends to verified addresses (admin = sender, so this works)
+### Phase 5: Verification
 
-### Step 12: Create Terraform Remote State Bucket
-- Creates `digi-dan-oss-tfstate` bucket for shared state
-- Enables versioning (protects against state corruption)
-- Enables AES256 encryption
-- Blocks all public access
-- **Skips** if bucket already exists
-- Prints instructions for migrating local state to S3
+| Step | Action | Duration |
+|---|---|---|
+| 12/12 | Final smoke test (site + API) | ~10s |
 
-### Step 13: GitHub Actions CI/CD (Optional)
-- If `gh` CLI is installed and authenticated:
-  - Prompts user to paste `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`
-  - Sets them as GitHub repository secrets via `gh secret set`
-  - **Never stores secrets** — pipes directly to `gh` CLI
-- If `gh` is not available:
-  - Prints manual instructions with the GitHub settings URL
-- Verifies `.github/workflows/deploy.yml` exists
+**Total: ~15-20 minutes**
 
-### Step 14: Smoke Test
-- **CloudFront**: curls the site URL, expects HTTP 200 (or 403 if outside Israel)
-- **API Gateway**: sends OPTIONS to `/apply`, expects HTTP 200
-- **Lambda**: POSTs a test application, verifies response contains `"message"`
-- **DynamoDB**: scans the table, reports item count
-- Prints the test application ID for cleanup
+## AWS Resources Created
 
----
+| Resource | Name/ID | Region |
+|---|---|---|
+| S3 (state) | `digi-dan-oss-tfstate` | il-central-1 |
+| S3 (site) | `digi-dan-oss-join-site` | il-central-1 |
+| DynamoDB | `community-applications` | il-central-1 |
+| Lambda | `digi-dan-oss-join-apply` | il-central-1 |
+| API Gateway | `digi-dan-oss-join-api` | il-central-1 |
+| CloudFront | distribution (Israel-only) | global |
+| ACM cert | `digi-dan.com` + `www` | us-east-1 |
+| Route 53 | A records + cert validation | global |
 
 ## Error Recovery
 
 | Scenario | What Happens |
-|----------|-------------|
-| **Missing AWS credentials** | Script aborts with setup instructions |
-| **Terraform init fails** | Script aborts — usually means no internet or bad provider version |
-| **Terraform apply partial failure** | Script offers to continue; re-run picks up where it left off |
-| **S3 upload fails** | Reported as failure; re-run retries the upload |
-| **CloudFront still deploying** | Smoke test warns; distribution takes ~5 min |
-| **SES verification not clicked** | Script warns; notifications won't work until verified |
-| **Second run (resources exist)** | Terraform updates in-place; uploads overwrite; SES skipped |
-| **Resources from a different deploy** | Terraform may need `import` — the scan warns you |
+|---|---|
+| Missing tools | Script aborts with install instructions |
+| Permission denied | Shows the missing IAM action + policy file to update |
+| S3 bucket creation denied | Manual fallback: AWS Console instructions, waits for user |
+| Terraform partial failure | Safe to re-run — state tracks what was created |
+| GitHub secrets already set | Prompts before overwriting |
+| Resources already exist | Terraform skips/updates in-place |
 
-## Modifying Constants
+## After First Deploy
 
-Edit the top of `deploy.sh` to change:
-
-```bash
-SITE_BUCKET="digi-dan-oss-join-site"    # S3 bucket name
-TFSTATE_BUCKET="digi-dan-oss-tfstate"   # TF state bucket
-ADMIN_EMAIL="tichnundan@gmail.com"       # SES notification target
-GITHUB_REPO="mahozdan/digi-dan-oss"      # For gh CLI secret setup
-```
-
-These must match the values in `terraform/main.tf`.
-
----
-
-## After Deploy
+- **Domain setup** (if not already done): `bash setup-domain.sh`
+- **Verify SES**: Ensure sender email is verified in il-central-1
+- **Test form**: Submit a test application on the live site
+- **Push changes**: Every push to `main` auto-deploys via GitHub Actions
 
 ```bash
 # View applications
-aws dynamodb scan --table-name community-applications --region il-central-1
+aws dynamodb scan --table-name community-applications --region il-central-1 --profile digi-dan
 
-# Re-deploy site changes
-bash deploy.sh
-
-# Update infrastructure only
-cd terraform && terraform plan && terraform apply
-
-# Invalidate CDN cache
-aws cloudfront create-invalidation --distribution-id <ID> --paths '/*'
+# Invalidate CDN cache manually
+aws cloudfront create-invalidation --distribution-id <ID> --paths '/*' --profile digi-dan
 ```
-
-## CI/CD After First Deploy
-
-Once GitHub secrets are set, every push to `main` auto-deploys via `.github/workflows/deploy.yml`. See [DEPLOY.md](DEPLOY.md) for full CI/CD documentation.
