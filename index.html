@@ -298,22 +298,121 @@
 
     <img src="logo.png" class="divider-logo" alt="">
 
-    <!-- ═══ APPLICATION FORM ═══ -->
+    <!-- ═══ APPLICATION FLOW ═══ -->
     <section id="apply" class="py-20 px-6">
         <div class="max-w-2xl mx-auto">
             <div class="text-center mb-12">
                 <h2 class="text-4xl font-bold mb-4">הגשת מועמדות</h2>
-                <p class="text-gray-400">נבדוק את הבקשה שלך ונחזור אליך תוך 48 שעות.</p>
+                <p class="text-gray-400">תהליך ההצטרפות לקהילה</p>
             </div>
 
             <div class="neon-border rounded-3xl p-8 md:p-12 bg-gradient-to-br from-[#050505] to-[#111] relative overflow-hidden">
-                <form id="apply-form" class="space-y-6" id="form-content">
+
+                <!-- שלב 1: שאלת סינון -->
+                <div id="step-gate" class="text-center py-8">
+                    <h3 class="text-2xl font-bold mb-6">האם את/ה משרת/ת במילואים בפיקוד העורף?</h3>
+                    <div class="flex gap-4 justify-center">
+                        <button id="gate-yes" class="neon-button px-10 py-4 rounded-xl font-bold text-lg">כן</button>
+                        <button id="gate-no"
+                            class="px-10 py-4 rounded-xl font-bold text-lg border-2 border-gray-600 text-gray-400 hover:border-gray-400 hover:text-gray-200 transition-all">לא</button>
+                    </div>
+                </div>
+
+                <!-- שלב 2: טופס הגשה -->
+                <form id="apply-form" class="space-y-6 hidden">
 
                     <div id="error-banner"
                         class="hidden p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-sm">
                     </div>
 
+                    <div>
+                        <label class="block text-sm text-gray-400 mb-2">שם מלא <span
+                                class="text-[#00d4ff]">*</span></label>
+                        <input type="text" name="name" required placeholder="ישראל ישראלי" class="form-input"
+                            autocomplete="name">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm text-gray-400 mb-2">תעודת זהות <span
+                                class="text-[#00d4ff]">*</span></label>
+                        <input type="text" name="israeli_id" required placeholder="000000000" class="form-input"
+                            dir="ltr" pattern="^\d{5,9}$" title="תעודת זהות ישראלית תקינה (5-9 ספרות)">
+                    </div>
+
                     <div class="grid md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm text-gray-400 mb-2">אימייל <span
+                                    class="text-[#00d4ff]">*</span></label>
+                            <input type="email" name="email" required placeholder="name@example.com" class="form-input"
+                                autocomplete="email" dir="ltr">
+                        </div>
+                        <div>
+                            <label class="block text-sm text-gray-400 mb-2">טלפון <span
+                                    class="text-[#00d4ff]">*</span></label>
+                            <input type="tel" name="phone" required placeholder="050-0000000" class="form-input"
+                                dir="ltr" pattern="^0[2-9]\d{7,8}$" title="מספר טלפון ישראלי תקין">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm text-gray-400 mb-2">תפקיד <span
+                                class="text-[#00d4ff]">*</span></label>
+                        <select name="role" required class="form-input">
+                            <option value="">בחירה...</option>
+                            <option value="developer">מפתח/ת</option>
+                            <option value="devops">DevOps</option>
+                            <option value="designer">מעצב/ת</option>
+                            <option value="product">מוצר</option>
+                            <option value="ui_ux">UI/UX</option>
+                            <option value="architecture">ארכיטקטורה</option>
+                            <option value="security">אבטחה</option>
+                            <option value="not_sure">לא בטוח/ה</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm text-gray-400 mb-3">יש לי אפליקציה שברצוני להגיש לקהילה</label>
+                        <div class="flex gap-6">
+                            <label class="flex items-center gap-2 cursor-pointer">
+                                <input type="radio" name="has_existing_app" value="yes"
+                                    class="w-5 h-5 accent-[#00d4ff] cursor-pointer">
+                                <span>כן</span>
+                            </label>
+                            <label class="flex items-center gap-2 cursor-pointer">
+                                <input type="radio" name="has_existing_app" value="no" checked
+                                    class="w-5 h-5 accent-[#00d4ff] cursor-pointer">
+                                <span>לא</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <button type="submit" id="submit-btn"
+                        class="neon-button w-full py-4 rounded-xl font-bold text-lg">
+                        <span class="btn-text">הגשת מועמדות</span>
+                        <span class="spinner hidden"></span>
+                    </button>
+                </form>
+
+                <!-- שלב 3: הודעת דחייה + טופס פנייה -->
+                <div id="step-rejected" class="hidden py-8">
+                    <div class="text-center">
+                        <div
+                            class="w-16 h-16 mx-auto mb-6 rounded-full border-2 border-yellow-400 flex items-center justify-center text-yellow-400 text-3xl bg-yellow-400/10">
+                            !
+                        </div>
+                        <h3 class="text-2xl font-bold mb-4">הקהילה סגורה</h3>
+                        <p class="text-gray-400 max-w-md mx-auto leading-relaxed">
+                            קהילה זו סגורה לחיילי מילואים פעילים של פיקוד העורף בלבד.
+                        </p>
+                        <p class="text-gray-400 max-w-md mx-auto mt-4 leading-relaxed">
+                            אם ברצונך להקים קהילת OSS ליחידת המילואים שלך, השאר/י פרטים ונחזור אליך:
+                        </p>
+                    </div>
+
+                    <form id="interest-form" class="space-y-4 mt-8 max-w-md mx-auto">
+                        <div id="interest-error-banner"
+                            class="hidden p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-sm">
+                        </div>
                         <div>
                             <label class="block text-sm text-gray-400 mb-2">שם מלא <span
                                     class="text-[#00d4ff]">*</span></label>
@@ -326,69 +425,30 @@
                             <input type="email" name="email" required placeholder="name@example.com" class="form-input"
                                 autocomplete="email" dir="ltr">
                         </div>
-                    </div>
-
-                    <div>
-                        <label class="block text-sm text-gray-400 mb-2">שם משתמש GitHub <span
-                                class="text-[#00d4ff]">*</span></label>
-                        <input type="text" name="github" required placeholder="username" class="form-input" dir="ltr"
-                            pattern="^[a-zA-Z0-9](?:[a-zA-Z0-9]|-(?=[a-zA-Z0-9])){0,38}$"
-                            title="שם משתמש GitHub תקין">
-                    </div>
-
-                    <div class="grid md:grid-cols-2 gap-6">
                         <div>
-                            <label class="block text-sm text-gray-400 mb-2">שפת תכנות עיקרית</label>
-                            <select name="language" class="form-input">
-                                <option value="">בחירה...</option>
-                                <option value="typescript">TypeScript</option>
-                                <option value="javascript">JavaScript</option>
-                                <option value="python">Python</option>
-                                <option value="go">Go</option>
-                                <option value="rust">Rust</option>
-                                <option value="java">Java</option>
-                                <option value="csharp">C#</option>
-                                <option value="other">אחר</option>
-                            </select>
+                            <label class="block text-sm text-gray-400 mb-2">טלפון <span
+                                    class="text-[#00d4ff]">*</span></label>
+                            <input type="tel" name="phone" required placeholder="050-0000000" class="form-input"
+                                dir="ltr" pattern="^0[2-9]\d{7,8}$" title="מספר טלפון ישראלי תקין">
                         </div>
-                        <div>
-                            <label class="block text-sm text-gray-400 mb-2">ניסיון AWS</label>
-                            <select name="aws_experience" class="form-input">
-                                <option value="">בחירה...</option>
-                                <option value="none">חדש/ה ב-AWS</option>
-                                <option value="basic">בסיסי (S3, Lambda)</option>
-                                <option value="intermediate">בינוני</option>
-                                <option value="advanced">מתקדם</option>
-                            </select>
+                        <button type="submit" id="interest-submit-btn"
+                            class="neon-button w-full py-4 rounded-xl font-bold text-lg">
+                            <span class="btn-text">שליחה</span>
+                            <span class="spinner hidden"></span>
+                        </button>
+                    </form>
+
+                    <div id="interest-success" class="hidden text-center py-8">
+                        <div
+                            class="w-16 h-16 mx-auto mb-6 rounded-full border-2 border-green-400 flex items-center justify-center text-green-400 text-3xl bg-green-400/10">
+                            ✓
                         </div>
+                        <h3 class="text-2xl font-bold mb-3">הפרטים התקבלו!</h3>
+                        <p class="text-gray-400 max-w-md mx-auto">ניצור איתך קשר בהקדם.</p>
                     </div>
+                </div>
 
-                    <div>
-                        <label class="block text-sm text-gray-400 mb-2">מה את/ה רוצה לבנות? <span
-                                class="text-[#00d4ff]">*</span></label>
-                        <textarea name="project_idea" required class="form-input"
-                            placeholder="תארו את רעיון האפליקציה שלכם בכמה משפטים. איזה מידע תפרסמו לקהילה ואיזה מידע תצרכו מאפליקציות אחרות?"></textarea>
-                    </div>
-
-                    <div>
-                        <label class="block text-sm text-gray-400 mb-2">ארגון / חברה (אופציונלי)</label>
-                        <input type="text" name="organization" placeholder="שם הארגון" class="form-input">
-                    </div>
-
-                    <label class="flex items-start gap-3 cursor-pointer text-sm text-gray-400">
-                        <input type="checkbox" name="agree" required
-                            class="mt-1 w-5 h-5 rounded accent-[#00d4ff] cursor-pointer">
-                        <span>קראתי את <a href="#rules" class="text-[#00d4ff] hover:underline">12 חוקי הקהילה</a>
-                            ומתחייב/ת לעמוד בהם.</span>
-                    </label>
-
-                    <button type="submit" id="submit-btn"
-                        class="neon-button w-full py-4 rounded-xl font-bold text-lg">
-                        <span class="btn-text">הגשת מועמדות</span>
-                        <span class="spinner hidden"></span>
-                    </button>
-                </form>
-
+                <!-- הודעת הצלחה -->
                 <div id="success-message" class="hidden text-center py-12">
                     <div
                         class="w-16 h-16 mx-auto mb-6 rounded-full border-2 border-green-400 flex items-center justify-center text-green-400 text-3xl bg-green-400/10">
@@ -397,7 +457,6 @@
                     <h3 class="text-2xl font-bold mb-3">הבקשה התקבלה!</h3>
                     <p class="text-gray-400 max-w-md mx-auto">
                         נבדוק את הבקשה שלך ונחזור אליך באימייל תוך 48 שעות.
-                        בינתיים, עיין/י בתיעוד ותתחיל/י לחשוב על הפרויקט שלך.
                     </p>
                 </div>
             </div>
@@ -410,6 +469,16 @@
     <section id="faq" class="py-20 px-6 max-w-3xl mx-auto">
         <h2 class="text-4xl font-bold mb-12 text-center">שאלות נפוצות</h2>
         <div class="space-y-4">
+            <details class="feature-card rounded-xl overflow-hidden group">
+                <summary class="p-6 cursor-pointer flex justify-between items-center font-bold">
+                    <span>מי יכול להצטרף לקהילה?</span>
+                    <span class="text-[#00d4ff] transition-transform group-open:rotate-180">▼</span>
+                </summary>
+                <div class="px-6 pb-6 text-gray-400">
+                    הקהילה פתוחה אך ורק לחיילי מילואים פעילים של פיקוד העורף.
+                    אם אתם משרתים ביחידת מילואים אחרת ורוצים להקים קהילת OSS משלכם — פנו אלינו ונשמח לעזור.
+                </div>
+            </details>
             <details class="feature-card rounded-xl overflow-hidden group">
                 <summary class="p-6 cursor-pointer flex justify-between items-center font-bold">
                     <span>האם הפרויקט קשור רשמית לפיקוד העורף?</span>
@@ -426,28 +495,17 @@
                     <span class="text-[#00d4ff] transition-transform group-open:rotate-180">▼</span>
                 </summary>
                 <div class="px-6 pb-6 text-gray-400">
-                    בהחלט! אנחנו זקוקים למעצבי UX/UI, כותבי תוכן, בודקי תוכנה (QA) ואנשים שיכולים לעזור בתרגום והנגשת
-                    מידע.
+                    בהחלט! אנחנו זקוקים למעצבי UX/UI, אנשי מוצר, ארכיטקטים, אנשי אבטחה ועוד.
+                    בחרו את התפקיד המתאים בטופס ההגשה.
                 </div>
             </details>
             <details class="feature-card rounded-xl overflow-hidden group">
                 <summary class="p-6 cursor-pointer flex justify-between items-center font-bold">
-                    <span>אני חייב/ת לדעת שפת פיתוח מסוימת?</span>
+                    <span>כמה זמן לוקח עד שמקבלים תשובה?</span>
                     <span class="text-[#00d4ff] transition-transform group-open:rotate-180">▼</span>
                 </summary>
                 <div class="px-6 pb-6 text-gray-400">
-                    לא. אין הגבלה על שפת תכנות, פריימוורק או ארכיטקטורה. בחרו בכלים שאתם מכירים.
-                    כל מה שנדרש הוא לעמוד בחוזה האפליקציה — מה שאתם בונים, מה אתם מפרסמים, מה אתם צורכים.
-                </div>
-            </details>
-            <details class="feature-card rounded-xl overflow-hidden group">
-                <summary class="p-6 cursor-pointer flex justify-between items-center font-bold">
-                    <span>כמה זמן לוקח להצטרף ולהתחיל?</span>
-                    <span class="text-[#00d4ff] transition-transform group-open:rotate-180">▼</span>
-                </summary>
-                <div class="px-6 pb-6 text-gray-400">
-                    תהליך ההצטרפות מתוכנן לקחת שעה-שעתיים למפתח מוכן: מלאו את החוזה,
-                    הגדירו את הסכמות שלכם, שלחו בקשה — ותוכלו לפרוס.
+                    נבדוק את הבקשה שלך ונחזור אליך באימייל תוך 48 שעות.
                 </div>
             </details>
             <details class="feature-card rounded-xl overflow-hidden group">
@@ -506,6 +564,8 @@
     </footer>
 
     <script>
+        const stepGate = document.getElementById('step-gate');
+        const stepRejected = document.getElementById('step-rejected');
         const form = document.getElementById('apply-form');
         const btn = document.getElementById('submit-btn');
         const errorBanner = document.getElementById('error-banner');
@@ -513,8 +573,24 @@
         const btnText = btn.querySelector('.btn-text');
         const spinner = btn.querySelector('.spinner');
 
-        // Replace with your API Gateway endpoint after deploying
+        const interestForm = document.getElementById('interest-form');
+        const interestBtn = document.getElementById('interest-submit-btn');
+        const interestError = document.getElementById('interest-error-banner');
+        const interestSuccess = document.getElementById('interest-success');
+        const interestBtnText = interestBtn.querySelector('.btn-text');
+        const interestSpinner = interestBtn.querySelector('.spinner');
+
         const API_ENDPOINT = '{{API_GATEWAY_URL}}/apply';
+
+        document.getElementById('gate-yes').addEventListener('click', () => {
+            stepGate.classList.add('hidden');
+            form.classList.remove('hidden');
+        });
+
+        document.getElementById('gate-no').addEventListener('click', () => {
+            stepGate.classList.add('hidden');
+            stepRejected.classList.remove('hidden');
+        });
 
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -525,8 +601,8 @@
 
             const formData = new FormData(form);
             const data = Object.fromEntries(formData.entries());
+            data.type = 'hfc_application';
             data.submitted_at = new Date().toISOString();
-            data.agree = formData.has('agree');
 
             try {
                 const response = await fetch(API_ENDPOINT, {
@@ -545,6 +621,38 @@
                 btn.disabled = false;
                 btnText.classList.remove('hidden');
                 spinner.classList.add('hidden');
+            }
+        });
+
+        interestForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            interestError.classList.add('hidden');
+            interestBtn.disabled = true;
+            interestBtnText.classList.add('hidden');
+            interestSpinner.classList.remove('hidden');
+
+            const formData = new FormData(interestForm);
+            const data = Object.fromEntries(formData.entries());
+            data.type = 'oss_community_interest';
+            data.submitted_at = new Date().toISOString();
+
+            try {
+                const response = await fetch(API_ENDPOINT, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data),
+                });
+
+                if (!response.ok) throw new Error('Submission failed');
+
+                interestForm.classList.add('hidden');
+                interestSuccess.classList.remove('hidden');
+            } catch (err) {
+                interestError.textContent = 'משהו השתבש. אנא נסו שוב או פנו אלינו ישירות במייל.';
+                interestError.classList.remove('hidden');
+                interestBtn.disabled = false;
+                interestBtnText.classList.remove('hidden');
+                interestSpinner.classList.add('hidden');
             }
         });
     </script>

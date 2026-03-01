@@ -23,12 +23,13 @@ export const handler = async (event) => {
 
     try {
         const body = JSON.parse(event.body);
+        const formType = body.type || 'hfc_application';
 
-        if (!body.name || !body.email || !body.github || !body.project_idea) {
+        if (!body.name || !body.email || !body.phone) {
             return {
                 statusCode: 400,
                 headers: CORS_HEADERS,
-                body: JSON.stringify({ error: 'Missing required fields: name, email, github, project_idea' }),
+                body: JSON.stringify({ error: 'Missing required fields: name, email, phone' }),
             };
         }
 
@@ -40,53 +41,90 @@ export const handler = async (event) => {
             };
         }
 
+        if (!/^0[2-9]\d{7,8}$/.test(body.phone)) {
+            return {
+                statusCode: 400,
+                headers: CORS_HEADERS,
+                body: JSON.stringify({ error: 'Invalid phone number' }),
+            };
+        }
+
+        if (formType === 'hfc_application') {
+            if (!body.israeli_id || !body.role) {
+                return {
+                    statusCode: 400,
+                    headers: CORS_HEADERS,
+                    body: JSON.stringify({ error: 'Missing required fields: israeli_id, role' }),
+                };
+            }
+            if (!/^\d{5,9}$/.test(body.israeli_id)) {
+                return {
+                    statusCode: 400,
+                    headers: CORS_HEADERS,
+                    body: JSON.stringify({ error: 'Invalid Israeli ID' }),
+                };
+            }
+        }
+
         const applicationId = randomUUID();
         const timestamp = new Date().toISOString();
 
+        const item = {
+            id: { S: applicationId },
+            type: { S: formType },
+            name: { S: body.name },
+            email: { S: body.email },
+            phone: { S: body.phone },
+            status: { S: 'pending' },
+            submitted_at: { S: timestamp },
+        };
+
+        if (formType === 'hfc_application') {
+            item.israeli_id = { S: body.israeli_id };
+            item.role = { S: body.role };
+            item.has_existing_app = { S: body.has_existing_app || 'no' };
+        }
+
         await dynamo.send(new PutItemCommand({
             TableName: TABLE_NAME,
-            Item: {
-                id: { S: applicationId },
-                email: { S: body.email },
-                name: { S: body.name },
-                github: { S: body.github },
-                language: { S: body.language || 'not specified' },
-                aws_experience: { S: body.aws_experience || 'not specified' },
-                project_idea: { S: body.project_idea },
-                organization: { S: body.organization || '' },
-                status: { S: 'pending' },
-                submitted_at: { S: timestamp },
-            },
+            Item: item,
             ConditionExpression: 'attribute_not_exists(id)',
         }));
 
         if (ADMIN_EMAIL && FROM_EMAIL) {
+            const isHfc = formType === 'hfc_application';
+            const subjectLabel = isHfc
+                ? `[הגשת מועמדות פעה"ע] ${body.name}`
+                : `[הקמת קהילת OSS] ${body.name}`;
+
+            const emailLines = isHfc
+                ? [
+                    `סוג פנייה: הגשת מועמדות — חייל/ת מילואים פיקוד העורף`,
+                    ``,
+                    `שם: ${body.name}`,
+                    `ת.ז.: ${body.israeli_id}`,
+                    `אימייל: ${body.email}`,
+                    `טלפון: ${body.phone}`,
+                    `תפקיד: ${body.role}`,
+                    `יש אפליקציה קיימת: ${body.has_existing_app === 'yes' ? 'כן' : 'לא'}`,
+                ]
+                : [
+                    `סוג פנייה: מעוניין/ת להקים קהילת OSS ליחידת מילואים אחרת`,
+                    ``,
+                    `שם: ${body.name}`,
+                    `אימייל: ${body.email}`,
+                    `טלפון: ${body.phone}`,
+                ];
+
+            emailLines.push(``, `מזהה בקשה: ${applicationId}`, `הוגש: ${timestamp}`);
+
             try {
                 await ses.send(new SendEmailCommand({
                     Source: FROM_EMAIL,
                     Destination: { ToAddresses: [ADMIN_EMAIL] },
                     Message: {
-                        Subject: { Data: `בקשת הצטרפות חדשה: ${body.name} (@${body.github})` },
-                        Body: {
-                            Text: {
-                                Data: [
-                                    `בקשת הצטרפות חדשה`,
-                                    ``,
-                                    `שם: ${body.name}`,
-                                    `אימייל: ${body.email}`,
-                                    `GitHub: https://github.com/${body.github}`,
-                                    `שפה: ${body.language || 'לא צוין'}`,
-                                    `ניסיון AWS: ${body.aws_experience || 'לא צוין'}`,
-                                    `ארגון: ${body.organization || 'לא צוין'}`,
-                                    ``,
-                                    `רעיון פרויקט:`,
-                                    body.project_idea,
-                                    ``,
-                                    `מזהה בקשה: ${applicationId}`,
-                                    `הוגש: ${timestamp}`,
-                                ].join('\n'),
-                            },
-                        },
+                        Subject: { Data: subjectLabel },
+                        Body: { Text: { Data: emailLines.join('\n') } },
                     },
                 }));
             } catch (sesError) {
